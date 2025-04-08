@@ -1,0 +1,55 @@
+\section{Konzept zur Umsetzung der Mieteransicht}
+    \subsection{Einleitung}
+    Folgend wird sich damit beschäftigt, wie das Produkt konkret umgesetzt werden kann. Aufbauend auf der Analyse der Anforderungen und den Ergebnissen der Machbarkeitsstudie wird ein detaillierter Plan zur Entwicklung des Systems vorgestellt. Ziel ist es, eine strukturierte Grundlage für die Entwicklung zu schaffen.
+    
+    \subsection{Zielsetzung}
+    Die Entwicklung eines intuitiven und effizienten Formularsystems, das den manuellen Datenerfassungsprozess der equilibria GmbH automatisiert. Das System soll die Erhebung von Gästedaten gemäß den gesetzlichen Vorgaben in Österreich und Italien erleichtern und die Datenqualität durch Validierung und Vollständigkeitsprüfungen sicherstellen.
+    
+    \subsection{Anforderungen}
+
+        \subsubsection{Funktionale Anforderungen}
+        \begin{itemize}
+            \item Bereitstellung länderspezifischer Eingabefelder für Österreich und Italien.
+            \item Echtzeit-Validierung der Eingaben zur Sicherstellung der Datenintegrität.
+            \item Überprüfung der Vollständigkeit der Daten vor dem Absenden.
+            \item Integration mit dem Backend-System zur Datenübertragung
+        \end{itemize}
+        
+        \subsubsection{Nicht-funktionale Anforderungen}
+        \begin{itemize}
+            \item Benutzerfreundliche und übersichtliche Gestaltung der Benutzeroberfläche.
+            \item Einhaltung des firmeneigenen Stil der equilibria GmbH
+            \item Sicherstellung der Datenvertraulichkeit und -sicherheit gemäß DSGVO.
+        \end{itemize}
+
+    \subsection{Technologischer Rahmen}
+    \label{sec:technoglogischerRahmen}
+    Basierend auf der Machbarkeitsstudie wurde entschieden, das von Mohamed Megahed ausgewählte Frontend-Framework mit dem von mir vorgeschlagenen zu kombinieren. Zum Einsatz kommen \gls{nextjs} und shadcn/ui in Verbindung mit React Hook Form. Für Validierungsschemata wird Zod verwendet, da dies, wie in der Dokumentation von shadcn/ui beschrieben, eine nahtlose Integration ermöglicht. \cite{prompt21_pollak}
+
+    \subsection{Datenstruktur und Erfassung}
+    Die Mieteransicht ist für die Erfassung der Gästedaten verantwortlich, wobei die erforderlichen Angaben je nach Land variieren. Die folgende Übersicht stellt die Unterschiede zwischen den in Österreich und Italien zu erfassenden Daten detailliert dar.
+    
+    \subsubsection{Erfasste Daten in Österreich}
+    In Österreich müssen gemäß der Meldepflicht folgende Daten erfasst werden:
+    \begin{itemize}
+        \item \textbf{Persönliche Daten:} Familienname, Vorname, Geschlecht (Männlich, Weiblich, Divers), Geburtsdatum, Staatsangehörigkeit.
+        \item \textbf{Reisedokument:} Reisepass oder Personalausweis mit Angabe von Ausstellungsdatum, ausstellender Behörde und Staat.
+        \item \textbf{Adresse und Herkunftsland:} Straße/Gasse/Platz, Postleitzahl, Ortsgemeinde, Staat.
+        \item \textbf{Mitreisende (falls vorhanden):} Name, Geburtsdatum.
+        \item \textbf{Aufenthaltsdaten:} Datum der Ankunft, voraussichtliche Abreise und tatsächliche Abreise.
+        \item \textbf{Tourist Tax:} Berechnung der anfallenden Abgaben.
+    \end{itemize}
+    
+    \subsubsection{Erfasste Daten in Italien}
+    In Italien ist eine manuelle Eingabe der Daten in das Portal der italienischen Polizei erforderlich. Erfasst werden:
+    \begin{itemize}
+        \item \textbf{Aufenthaltsdaten:} Anreisedatum, Anzahl der Nächte.
+        \item \textbf{Herkunftsland und Staatsbürgerschaft.}
+        \item \textbf{Falls Italiener:} Geburtsort.
+        \item \textbf{Persönliche Daten:} Vorname, Nachname, Geburtsdatum (Format: DD/MM/YYYY).
+        \item \textbf{Ausweisdokument:} Reisepass oder Personalausweis. Falls Reisepass: AIRE-Vermerk vorhanden?
+        \item \textbf{Mitreisende:} Herkunftsland, Nachname, Vorname, Geburtsdatum, Geschlecht, Staatsangehörigkeit.
+        \item \textbf{Tourist Tax:} Berechnung der anfallenden Abgaben.
+    \end{itemize}
+    
+    Da viele dieser Daten unter die DSGVO-Kategorie "personenbezogene Daten" fallen und insbesondere die Reisedokumente als "sensible Daten" gelten, müssen sie unter strikter Einhaltung der Datenschutzrichtlinien verarbeitet werden.

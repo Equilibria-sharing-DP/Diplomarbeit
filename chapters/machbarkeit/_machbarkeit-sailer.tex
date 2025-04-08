@@ -1,0 +1,115 @@
+\section{Technische Machbarkeit der Datenbank}
+\subsection{Methodik}
+
+Die im vorherigen Kapitel beschriebenen DBMS werden in diesem Abschnitt detailliert untersucht, miteinander verglichen und bewertet. Dabei erfolgt die Beurteilung anhand der folgenden acht Kriterien: Leistungsfähigkeit, Skalierbarkeit, Wirtschaftlichkeit, Unterstützung durch Community und Support, Verfügbarkeit, Sicherheit, Anpassungsfähigkeit sowie der Dokumentation.
+
+\subsection{Bewertung der Datenbanktechnologien}
+
+Die Wahl der Kriterien für die Bewertung von Datenbanktechnologien basiert auf den spezifischen Anforderungen des Projekts. Jedes Kriterium repräsentiert eine wesentliche Eigenschaft, die maßgeblich zur erfolgreichen Implementierung einer Datenbanklösung beiträgt. Die Gewichtung der Kriterien erfolgte in Abstimmung mit den Projektzielen und der vorgesehenen Nutzung der Datenbank.
+
+\begin{itemize}
+	\item \textbf{Performance (20\%)}: 
+	Die Fähigkeit der Datenbank, schnell auf Anfragen zu reagieren und große Datenmengen effizient zu verarbeiten.
+	
+	\item \textbf{Skalierbarkeit (15\%)}: 
+	Eine Datenbank muss problemlos mit einem wachsenden Datenvolumen und einer steigenden Anzahl von Nutzern umgehen können, ohne dass die Leistung stark beeinträchtigt wird.
+	
+	\item \textbf{Kosten (10\%)}: 
+	Die Wirtschaftlichkeit einer Lösung ist ein zentraler Faktor, insbesondere in Bezug auf Lizenzgebühren, Betriebskosten und mögliche Einsparungen durch Open-Source-Lösungen. Eine kosteneffiziente Lösung ist ein wichtiger Punkt des Auftraggebers.
+	
+	\item \textbf{Community und Support (10\%)}: 
+	Eine aktive Community erleichtert die Lösung technischer Probleme und gewährleistet die kontinuierliche Weiterentwicklung der Technologie.
+	
+	\item \textbf{Verfügbarkeit (10\%)}: 
+	Die Datenbank muss eine hohe Verfügbarkeit und Zuverlässigkeit gewährleisten, um Betriebsunterbrechungen zu vermeiden.
+	
+	\item \textbf{Sicherheit (15\%)}: 
+	Der Schutz sensibler Daten vor unbefugtem Zugriff und Cyberangriffen ist unerlässlich. Dazu zählen Mechanismen wie Verschlüsselung, Zugangskontrollen und regelmäßige Sicherheitsupdates.
+	
+	\item \textbf{Flexibilität (10\%)}: 
+	Die Datenbank sollte anpassbar sein und verschiedene Datenmodelle sowie Integrationen unterstützen, um unterschiedlichen Anforderungen gerecht zu werden und in Zukunft erweiterbar zu sein.
+	
+	\item \textbf{Dokumentation und Verwaltung (10\%)}: 
+	Eine klare und umfassende Dokumentation sowie benutzerfreundliche Verwaltungswerkzeuge sind essenziell, um das Aufsetzen als auch die Bedienung und Wartung der Datenbank zu erleichtern.
+\end{itemize}
+
+\noindent Die Gewichtung dieser Kriterien spiegelt die spezifischen Anforderungen des Projekts wider. Die höchsten Prioritäten wurden auf Performance und Skalierbarkeit gelegt, da sie die Grundlage und den Sinn des Projektes bilden. Sicherheit ist ebenfalls von zentraler Bedeutung, um den Schutz sensibler Daten zu gewährleisten und rechtliche Vorgaben einzuhalten. Aspekte wie Community und Support, Verfügbarkeit, Flexibilität sowie Dokumentation und Verwaltung werden als unterstützende, aber nicht primäre Faktoren betrachtet. 
+
+\vspace{3mm}
+\noindent Der Auftraggeber wünschte eine möglichst kosteneffiziente Arbeitsweise, weshalb entschieden wurde, eine Open-Source-Lösung zu bevorzugen. Dennoch wurde ein kostenpflichtiges DBMS in die Analyse einbezogen, um potenzielle Vorteile, einschließlich finanzieller Aspekte, zu bewerten und einen umfassenden Vergleich zu ermöglichen. (Prompt \cite{ChatGPT:rewrite2})
+
+\subsection{Ergebnisse}
+
+Die analysierten Datenbanktechnologien wurden basierend auf den Kriterien Performance, Skalierbarkeit, Kosten, Community und Support, Verfügbarkeit, Sicherheit, Flexibilität, Dokumentation und Verwaltung bewertet. Im Folgenden werden die Ergebnisse der Untersuchung für die einzelnen Technologien dargestellt. Ziel war es, die für das Projekt am besten geeignete Lösung zu identifizieren, die sowohl den technischen Anforderungen als auch den finanziellen Rahmenbedingungen entspricht.
+
+\subsubsection{PostgreSQL}
+PostgreSQL erwies sich als eine leistungsfähige und vielseitige Open-Source-Datenbank. Laut dem Paper \cite{Paper:performanceComparison} bietet sie eine hervorragende Performance bei komplexen Abfragen und eignet sich besonders gut für Anwendungen, die große Datenmengen verarbeiten. Auch in Bezug auf die Skalierbarkeit zeigt PostgreSQL klare Stärken: Bei der vertikalen Skalierung kann die Leistung durch den Ausbau von Hardware-Ressourcen wie CPU, Arbeitsspeicher oder Speicherplatz verbessert werden – was vergleichsweise einfach umzusetzen ist. Horizontale Skalierung hingegen bedeutet, die Last auf mehrere Server zu verteilen, was in PostgreSQL beispielsweise durch Replikation oder den Einsatz von Tools wie zum Beispiel Citus realisierbar ist. Die aktive Community sowie eine gute Dokumentation erleichtern sowohl die Einarbeitung als auch den zuverlässigen Betrieb. Zudem überzeugt PostgreSQL durch seine kostenfreie Verfügbarkeit und starke Sicherheitsfunktionen. 
+
+\subsubsection{MariaDB}
+MariaDB, eine ebenfalls weit verbreitete Open-Source-Datenbank, überzeugte mit solider Performance, die jedoch insbesondere bei leseintensiven Anwendungen und einfachen Abfragen nicht ganz das Niveau von MySQL erreicht, siehe \cite{Paper:performanceComparisonMySQL}(Prompt \cite{ChatGPT:rewrite3}).Die Datenbank ist leicht zu verwalten und bietet solide Optionen für die vertikale Skalierung. Jedoch sind die Möglichkeiten für horizontale Skalierung, also das Verteilen von Daten auf mehrere Knotenpunkte, begrenzt. Im Gegenzug zu PostgreSQL stößt MariaDB hier an seine Grenzen. Dennoch ist MariaDB dank ihrer einfachen Verwaltung, einer großen Community und guter Dokumentation besonders gut für kleine bis mittelgroße Projekte geeignet. Die kostenlose Community-Edition ist für die meisten Anforderungen ausreichend, während die Enterprise-Edition zusätzliche kostenpflichtige Features bereitstellt. \textit{\cite{Buch:PierreMavro} - Chapter 2, Performance Analysis}
+
+\subsubsection{MongoDB}
+MongoDB als NoSQL-Datenbank hebt sich durch ihre hohe Flexibilität, Skalierbarkeit und Performance hervor. Sie eignet sich hervorragend für Anwendungen mit variablen Datenstrukturen und unstrukturierten Daten. Besonders bei großen Datenmengen und häufigen Schreibvorgängen zeigt MongoDB ihre Stärken. Laut \cite{Paper:performanceComparison} ist MongoDB allerdings für relationale Abfragen weniger geeignet und weist im Vergleich zu den anderen Technologien einen höheren Speicherbedarf auf. Die Community-Edition ist kostenlos verfügbar, während die Enterprise-Version zusätzliche Kosten verursacht. 
+
+\subsubsection{Amazon Aurora}
+Amazon Aurora, eine vollständig verwaltete Cloud-Datenbank, überzeugte durch ihre hohe Performance und Skalierbarkeit, siehe \cite{Amazon:aurora}. Automatische Backups, Replikationen und Failover-Mechanismen machen Aurora zu einer sehr zuverlässigen Lösung, die insbesondere in Cloud-Umgebungen ihre Stärken ausspielt. Allerdings ist diese Technologie im Vergleich zu den Open-Source-Alternativen mit hohen Kosten verbunden und stark an das AWS-Ökosystem gebunden, was die Flexibilität einschränken kann. 
+
+
+\subsection{Bewertung}
+Die Bewertung der einzelnen Technologien erfolgt anhand eines einfachen Punktesystems, wobei 1 die niedrigste und 5 die höchste erreichbare Punktzahl darstellt.
+
+\vspace{10mm}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l|c|c|c|c|c|}
+		\hline
+		\rowcolor[HTML]{B6D7A8}
+		\textbf{Kriterium} & \textbf{Gewichtung (\%)} & \textbf{PostgreSQL} & \textbf{MariaDB} & \textbf{MongoDB} & \textbf{Aurora} \\ \hline
+		
+		Performance & 20 & 4 & 5 & 3 & 4 \\ \hline
+		Skalierbarkeit & 15 & 4 & 3 & 4 & 5 \\ \hline
+		Kosten & 10 & 5 & 5 & 4 & 1 \\ \hline
+		Community und Support & 10 & 5 & 5 & 4 & 5 \\ \hline
+		Verfügbarkeit & 10 & 4 & 4 & 4 & 5 \\ \hline
+		Sicherheit & 15 & 4 & 4 & 3 & 4 \\ \hline
+		Flexibilität & 10 & 3 & 4 & 5 & 4 \\ \hline
+		Dokumentation und Verwaltung & 10 & 5 & 5 & 3 & 5 \\ \hline
+		\textbf{GESAMT} & \textbf{100} & & & & \\ \hline
+	\end{tabular}
+	\caption{Bewertung der Datenbanken nach verschiedener Kriterien (1 = sehr schlecht | 5 = sehr gut) \cite{ChatGPT:table1}}
+\end{table}
+
+\noindent In Tabelle 6.3 wird eine übersichtliche Darstellung der im Rahmen der Machbarkeitsstudie zusammengetragenen Informationen gezeigt. Die Tabelle vergleicht die verschiedenen Systeme anhand der genannten Kriterien, um die optimale Entscheidung treffen zu können.
+
+\newpage
+\noindent In Tabelle 6.4 werden die Punkte unter Berücksichtigung der Gewichtung berechnet, wodurch das Ergebnis der Nutzwertanalyse ermittelt wird.
+
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\rowcolor[HTML]{B6D7A8}
+		\textbf{Kriterium} & \textbf{PostgreSQL} & \textbf{MariaDB} & \textbf{MongoDB} & \textbf{Aurora} \\ \hline
+		Performance             & 0,8 & 1    & 0,6 & 0,8  \\ \hline
+		Skalierbarkeit          & 0,6 & 0,45 & 0,6 & 0,75 \\ \hline
+		Kosten                  & 0,5 & 0,5  & 0,4 & 0,1  \\ \hline
+		Community und Support   & 0,5 & 0,5  & 0,4 & 0,5  \\ \hline
+		Verfügbarkeit           & 0,4 & 0,4  & 0,4 & 0,5  \\ \hline
+		Sicherheit              & 0,6 & 0,6  & 0,45 & 0,6  \\ \hline
+		Flexibilität            & 0,3 & 0,4  & 0,5 & 0,4  \\ \hline
+		Dokumentation und Verwaltung& 0,5 & 0,5  & 0,3 & 0,5  \\ \hline
+		
+		\textbf{Gesamtergebnis} & \textbf{4,00} & \textbf{4,15} & \textbf{3,5} & \textbf{3,95} \\ \hline
+	\end{tabular}
+	\caption{Berechnung der einzelnen Bewertung, hierbei gilt: je höher desto besser \cite{ChatGPT:table2}}
+	\label{tab:db-berechnung}
+\end{table}
+
+
+\subsection{Schlussfolgerung}
+
+Die Nutzwertanalyse bestätigt \textbf{MariaDB} als die beste Wahl für das Projekt, da sie eine optimale Balance zwischen Performance, 
+Skalierbarkeit und Kosten bietet. Alternativen wie PostgreSQL, MongoDB und Amazon Aurora wurden bewertet, erfüllten jedoch die spezifischen 
+Anforderungen nicht in gleicher Weise.
+

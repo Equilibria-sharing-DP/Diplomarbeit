@@ -1,0 +1,481 @@
+\section{Implementierung des Formularsystems}
+
+\subsection{Überblick}
+Alle relevanten Codeteile sowie ergänzende Dokumentationen sind im GitHub-Repository verfügbar, das unter dem folgenden Link eingesehen werden kann: \cite{equilibriaSharingFrontend}. In diesem Repository sind sowohl die Quellcodes der Implementierung als auch zusätzliche Dateien enthalten, die zur Dokumentation und zum besseren Verständnis des Projekts beitragen.
+
+\subsection{Verwendete Technologien und Pakete}
+\label{sec:verwendeteTechnologien}
+Im Rahmen der Machbarkeitsstudie wurde ein technischer Rahmen definiert, an den sich die Implementierung des Projekts gehalten hat. Wie in \ref{sec:technoglogischerRahmen} beschrieben, wurden für das Frontend Next.js 14.2.21 sowie shadcn/ui in Verbindung mit React Hook Form verwendet. Zur Definition von Validierungsschemata kam Zod zum Einsatz. Um die Webseite in mehreren Sprachen zur Verfügung zu stellen, wurde für die Internationalisierung die Bibliothek next-intl verwendet. 
+
+\subsection{Projektstruktur}
+Das Frontend wurde in zwei wesentliche Teile gegliedert, die jedoch innerhalb eines einzigen Projekts umgesetzt wurden. Diese Gliederung umfasst die Mitarbeiteransicht sowie die Mieteransicht. Im Folgenden wird erläutert, wie diese Struktur im Next.js-Projekt konkret umgesetzt wurde.
+
+\subsubsection{Umsetzung}
+In der verwendeten Version von Next.js existiert ein ``src``-Verzeichnis, das die zentrale Projektstruktur organisiert. Innerhalb dieses Verzeichnisses befindet sich der ``app``-Ordner, welcher sämtliche Seiten des Projekts enthält. Die Erreichbarkeit dieser Seiten erfolgt über die Namensgebung der jeweiligen Unterordner, wodurch das \gls{routing} in Next.js automatisch gesteuert wird.
+
+Zusätzlich sind alle wiederverwendbaren \gls{components} des Projekts im components-Verzeichnis abgelegt. Die Struktur wurde so gestaltet, dass sowohl der ``app``- als auch der ``components``-Ordner eine logische Unterteilung für die beiden Hauptbereiche des Frontends aufweisen. Dies sorgt für eine klare Trennung der Funktionalitäten und erleichtert die Wartung sowie Erweiterbarkeit des Codes. \cite{prompt23_pollak}
+
+Die hierarchische Struktur der Projektorganisation wird in der folgenden Darstellung verdeutlicht:
+
+\dirtree{%
+	.1 src.
+	.2 app.
+	.3 (other).
+	.3 tenantDataManagement.
+	.3 tenantRegistration.
+	.2 components.
+	.3 tenantDataManagementComponents.
+	.3 tenantRegistrationComponents.
+	.3 ui.
+}
+
+Wie in der Darstellung zu sehen, enthält der ``components``-Ordner auch einen Unterordner namens ``(other)``, der Seiten enthält, die keiner der beiden Hauptansichten zugeordnet werden können. Dazu gehören beispielsweise Fehlerseiten oder rechtliche Seiten. Die Klammern um den Namen dieses Ordners dienen dazu, dass dieser nicht als Pfad im Browser berücksichtigt wird. Der Ordner dient ausschließlich der Strukturierung und Organisation des Codes.
+
+Zusätzlich gibt es einen Ordner namens ``ui`` im ``components``-Verzeichnis, der die \gls{components} aus shadcn/ui enthält. Alle anderen Komponenten, die für beide Ansichten des Frontends verwendet werden, sind direkt im ``components``-Ordner abgelegt.
+
+\subsection{Frontend-Entwicklung des Formularsystems}
+\subsection{Komponentenstruktur und Aufbau}
+Das Formularsystem besteht gemäß dem Lastenheft aus zwei Formularen, die die erforderlichen Daten unter Berücksichtigung der rechtlichen Anforderungen der jeweiligen Länder erfassen. In diesem Fall handelt es sich um die Länder Österreich und Italien. Es wurden zwei \gls{components} entwickelt, die sich lediglich in den erfassten Daten unterscheiden, um den länderspezifischen Anforderungen gerecht zu werden.
+Die Seite tenantRegistration entscheidet anhand der Adresse des Apartments, welches der beiden Formulare angezeigt werden muss. Auf die genauere Umsetzung dieser Formulare wird im weiteren Verlauf eingegangen, jedoch wird zunächst eine allgemeine Einführung in den Aufbau von \gls{components} benötigt.\cite{prompt24_pollak}
+
+\subsubsection{Allgemeiner Aufbau von Komponenten}
+\gls{components} in Next.js-Projekten folgen wie immer einem ähnlichen Schema. Dieses sieht folgendermaßen aus:
+
+\begin{enumerate}
+	
+	\item \textbf{Importe} Zu Beginn müssen \gls{react} und andere benötigte Module importiert werden. Diese Importe können andere Komponenten, React-Funktionen oder zusätzliche Dateien wie CSS-Module umfassen.
+\begin{lstlisting}[language=JavaScript]
+import React from 'react';
+import styles from './globals.css'; 
+import { Input } from "@/components/ui/input";
+	\end{lstlisting}
+	
+	\item \textbf{Komponenten-Funktion} Anschließend wird die Komponente definiert. Dabei werden ihr Name und die Parameter (Props) angegeben. Eine Next.js-Komponente kann entweder als export default function oder als benannte Funktion (export function) exportiert werden. Benannte Exporte ermöglichen es, mehrere Komponenten aus einer Datei zu exportieren.
+\begin{lstlisting}[language=JavaScript]
+export function ComponentName({ titel, description }) {
+    ...
+}
+	\end{lstlisting}
+
+\newpage
+
+    
+	\item \textbf{Layout} Das Layout wird mit \gls{jsx} geschrieben, einer Syntaxerweiterung für JavaScript, die HTML-ähnlichen Code ermöglicht. Hier können dynamische Werte mit Geschwungenden Klammern eingebunden werden. Der Rückgabewert (return) enthält den Code, das beim Rendern der Komponente ausgegeben wird.
+\begin{lstlisting}[language=JavaScript]
+return (
+    <div>
+    <h1>{title}</h1>
+    <p>{description}</p>
+    </div>
+);
+	\end{lstlisting}
+	
+	\item \textbf{Funktionen und Variablen} Das Layout kann mit JavaScript interagieren, um dynamische Inhalte zu ermöglichen. Dabei gibt es zwei Arten von Variablen:
+	\begin{itemize}
+		\item \textbf{Konstanten außerhalb der Komponente} Diese werden einmalig beim Laden des Moduls definiert und ändern sich nicht.
+		\item \textbf{Variablen innerhalb der Komponente} Diese können sich ändern, z. B. durch Benutzerinteraktionen oder Zustandsänderungen mittels ``useState``.\cite{prompt25_pollak}
+	\end{itemize}
+\end{enumerate}
+
+\subsection{Benutzeroberfläche}
+Damit das Formular korrekt dargestellt wird, müssen die einzelnen \gls{components} im App-Ordner eingebunden werden. Dort wird auch das Layout der Box definiert, in der das Formular angezeigt wird.
+
+\subsubsection{Layout}
+Das Formular zur Mieterregistrierung wird vertikal und horizontal zentriert dargestellt und passt sich durch ein responsives Design an verschiedene Bildschirmgrößen an. Die Oberfläche verwendet je nach Theme einen hellen oder dunklen Hintergrund. Der Inhalt ist in einer maximal 3XL breiten Box untergebracht, die abgerundete Ecken, Schatten und einen Rahmen besitzt. Innerhalb dieser Box befinden sich der Titel ``Mieter Registrierung``, ein Hinweis auf Pflichtfelder sowie die eigentlichen Formularelemente. \cite{prompt26_pollak}
+
+\subsubsection{Formularfelder}
+Die Felder im Formular folgen einem einheitlichen Aufbau. Sie bestehen aus einem Label, einem Eingabefeld und einer Fehlermeldung, falls die Validierung fehlschlägt. Das wird durch das FormField-System von React Hook Form umgesetzt, das direkt mit dem Formular-Controller verbunden ist. Fehler werden über fieldState.error erkannt und entsprechend angezeigt.
+
+\paragraph{Textfelder}
+Einfache Textfelder ermöglichen die Eingabe von Zeichenketten, etwa für Namen oder Adressen.
+
+\newpage
+
+\paragraph{Auswahlfelder}
+Das Select-Element erlaubt dem Benutzer, eine Option aus einer Dropdown-Liste auszuwählen. Der ''SelectTrigger'' zeigt den aktuellen Wert an, während ''SelectContent'' die möglichen Auswahloptionen enthält.
+
+\begin{lstlisting}[language=JavaScript]
+<Select>
+    <FormControl>
+        <SelectTrigger placeholder="Geschlecht auswählen">
+            <SelectValue/>
+        </SelectTrigger>
+    </FormControl>
+    <SelectContent>
+        {genderOptions.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+                {option.label}
+            </SelectItem>
+        ))}
+    </SelectContent>
+</Select>
+\end{lstlisting}
+
+\paragraph{Länderauswahl}
+Das Länderauswahlfeld funktioniert ähnlich wie ein Dropdown-Menü, bietet aber zusätzlich eine Suchfunktion, mit der gezielt nach einem Land gesucht werden kann.
+
+\paragraph{Mitreisende}
+Da die Anzahl der Mitreisenden nicht fix ist, muss das Formular flexibel sein. Über einen Button können weitere Eingabefelder hinzugefügt oder wieder entfernt werden. Die Felder werden in einer Schleife gerendert:
+
+\begin{lstlisting}[language=JavaScript]
+{fields.map((field, index) => (
+    $// Formularfeld für Mitreisende$
+))}
+\end{lstlisting}
+
+Dadurch können beliebig viele Mitreisende eingetragen und verwaltet werden.
+
+\subsection{\gls{state-management} und Formularlogik}
+
+\subsubsection{Pageination}
+Um eine benutzerfreundliche Dateneingabe zu ermöglichen, wurde das Formular in mehrere Seiten unterteilt. Dadurch wird die Eingabe strukturiert und übersichtlich gehalten. Die einzelnen Seiten werden in einer Konstante als Liste von ''<div>''-Elementen gespeichert, die jeweils einen eindeutigen Key besitzen. In diesen ''<div>''-Elementen wird wie oben erläuterter \gls{jsx}-Code geschrieben:
+\begin{lstlisting}[language=JavaScript]
+const pages = [
+<div key="page1"> // Formular Seite 1 </div>,
+<div key="page2"> // Formular Seite 2 </div>,
+...
+];
+\end{lstlisting}
+
+Der aktuelle Seitenindex wird in einer ''useState''-Variable (currentPage) gespeichert. Um die richtige Seite anzuzeigen, wird im Layout einfach der entsprechende Index aus dem ''pages''-Array verwendet:
+\begin{lstlisting}[language=JavaScript]
+{pages[currentPage]}
+\end{lstlisting}
+
+\newpage
+
+\subsubsection{Formularsteuerung} 
+\label{sec:formularsteuerung}
+Nachdem die Seitenstruktur des Formulars definiert wurde, muss eine Möglichkeit geschaffen werden, um zwischen den einzelnen Seiten zu navigieren. Dazu werden Buttons verwendet, die je nach aktuellem Fortschritt im Formular unterschiedliche Funktionen übernehmen. Die Steuerung erfolgt dynamisch anhand des aktuellen Seitenindex:
+
+\begin{lstlisting}[language=JavaScript]
+{currentPage > 0 && (
+    <Button type="button" variant="secondary" onClick={handlePreviousPage}>
+        Zurück
+    </Button>
+)}
+{currentPage < pages.length - 1 ? (
+    <Button type="button" onClick={handleNextPage}>
+        Weiter
+    </Button>
+    ) : (
+    <Button type="button" onClick={() => form.handleSubmit(onSubmit)()}>
+        Abschicken
+    </Button>
+)}
+\end{lstlisting}
+
+\begin{itemize}
+	\item \textbf{``Zurück``-Button:}  
+	\begin{itemize}
+		\item Wird nur angezeigt, wenn sich der Benutzer nicht auf der ersten Seite befindet \verb|(currentPage > 0)|.  
+		\item Ein Klick ruft die Funktion ''handlePreviousPage'' auf, die den Index ''currentPage'' um 1 reduziert.  
+	\end{itemize}
+	
+	\item \textbf{``Weiter``-Button:}  
+	\begin{itemize}
+		\item Erscheint nur, wenn es noch weitere Seiten gibt \verb|(currentPage < pages.length - 1)|.  
+		\item Ein Klick ruft ''handleNextPage'' auf, wodurch ''currentPage'' um 1 erhöht wird.  
+	\end{itemize}
+	
+	\item \textbf{``Abschicken``-Button:}  
+	\begin{itemize}
+		\item Wird nur auf der letzten Seite angezeigt.  
+		\item Statt zur nächsten Seite zu wechseln, wird die ''onSubmit''-Funktion des Formulars aufgerufen, um die eingegebenen Daten zu verarbeiten.  
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Handling der Formularsteuerung}
+\label{sec:handlingFormularsytem}
+
+Wie bereits zuvor beschrieben, rufen die Buttons beim Betätigen verschiedene Handling-Methoden auf. Die einfachste Methode ist diejenige, um eine Seite zurückzugehen. Hierbei wird einfach die Variable für die aktuelle Seite um eins verringert:
+
+\begin{lstlisting}[language=JavaScript]
+const handlePreviousPage = () => {
+    setCurrentPage((prev) => prev - 1);
+};
+\end{lstlisting}
+
+\newpage
+
+Für das Weitergehen im Formular wird eine etwas komplexere Methode verwendet, da hier zusätzlich eine Validierung der aktuellen Seite erfolgt. Der folgende Code führt diese Methode aus:
+
+\begin{lstlisting}[language=JavaScript]
+const handleNextPage = async () => {
+    const isValid = await validateCurrentPage();
+    if (isValid) {
+        setCurrentPage((prev) => prev + 1);
+    }
+};
+\end{lstlisting}
+Zuerst wird die Funktion zur Validierung der aktuellen Seite aufgerufen. Falls diese eine positive Rückmeldung liefert, wird, wie oben beschrieben, die Seite gewechselt. Weitere Details zur Validierung sind in Abschnitt \ref{sec:validierung} zu finden.
+
+Schließlich wird das Formular über die Methode ``onSubmit`` abgeschickt. Diese Methode ist dafür zuständig, die Formulardaten an das Backend zu übermitteln. Eine genauere Erläuterung dieser Methode erfolgt im Kapitel \ref{sec:backendCom}.
+
+\subsection{Validierung}
+\label{sec:validierung}
+Die Validierung im Formular wird mit Hilfe eines Validierungsschemas durchgeführt, welches durch die in Kapitel \ref{sec:verwendeteTechnologien} beschriebene Bibliothek Zod definiert wird. Zod ermöglicht es, Validierungsschemata für verschiedene Datenstrukturen zu erstellen und sicherzustellen, dass die Eingabedaten den festgelegten Anforderungen entsprechen. Das Schema für das implementierte Formular ist sehr umfangreich und folgt in den meisten Fällen einem ähnlichen Aufbau. Um zu veranschaulichen, wie ein solches Schema definiert wird, folgt hier ein Auszug:
+
+\begin{lstlisting}[language=JavaScript]
+const formSchema = z.object({
+    accommodationId: z.number(),
+    mainTraveler: z.object({
+        firstName: z.string({
+            required_error: "Vorname ist erforderlich",
+        }).max(50, "Vorname darf maximal 50 Zeichen lang sein")
+        .refine((value) => nameRegex.test(value), {
+            message: "Nur Buchstaben, Leerzeichen, ...
+        }),
+        ...
+    }),
+    ...
+});
+\end{lstlisting}
+
+Zunächst wird hier angegeben, dass die ``accommodationId`` eine Zahl sein muss. Der komplexere Teil des Schemas betrifft das ``firstName``-Feld, das eine Unterkategorie des Objekts ``mainTraveler`` ist. Für dieses Feld wird definiert, welche Anforderungen erfüllt sein müssen und welche Fehlermeldung angezeigt wird, wenn diese Anforderungen nicht erfüllt sind. Sollte der Vorname beispielsweise mehr als 50 Zeichen enthalten, wird die folgende Fehlermeldung angezeigt: ``Vorname darf maximal 50 Zeichen lang sein.``
+
+Die Methode ''.refine'' prüft, ob im eingegebenen Wert unerlaubte Sonderzeichen enthalten sind. Diese zusätzliche Validierung dient der Sicherheit und stellt sicher, dass nur erlaubte Zeichen verwendet werden. Die genaue Erklärung dieser Validierung findet sich in \ref{datenvaliderung}. Das zugrunde liegende Muster für die erlaubten Zeichen wird mit einer sogenannten ``Regex`` (Regulären Ausdruck) überprüft, welcher hier wie folgt aussieht:
+
+\begin{lstlisting}[language=JavaScript]
+const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
+\end{lstlisting}
+
+
+Das vollständige Schema ist im Repository unter \cite{equilibriaSharingFrontend} zu finden, genauer gesagt in den Dateien ''src/components/tenantRegistration/formAustria.tsx'' oder ''formItaly.tsx''.
+
+\subsubsection{Einbindung des Validierungsschemas}
+Das zuvor definierte Validierungsschema wird direkt in der Definition der ''form''-Variable integriert. Dies erfolgt durch den sogenannten ''resolver'', der das Schema mit der verwendeten Formularbibliothek verbindet:
+
+\begin{lstlisting}[language=JavaScript]
+const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    ...
+});
+\end{lstlisting}
+
+Dadurch wird sichergestellt, dass alle Formulareingaben anhand des definierten Schemas überprüft werden.
+
+\paragraph{Seitenspezifische Validierung}
+Da das Formular in mehrere Seiten unterteilt ist, muss die Validierung für jede Seite individuell durchgeführt werden. Dies geschieht nicht automatisch, sondern wird explizit beim Betätigen des ''Weiter''-Buttons (siehe Kapitel \ref{sec:handlingFormularsytem}) ausgelöst. Dabei wird die Methode ''validateCurrentPage'' aufgerufen, welche bestimmt, welche Felder auf der aktuellen Seite überprüft werden sollen.
+
+Die Methode ist so aufgebaut, dass sie abhängig von der aktuellen Seite (''currentPage'') eine Liste relevanter Felder erstellt und anschließend nur diese validiert:
+
+\begin{lstlisting}[language=JavaScript]
+const validateCurrentPage = async () => {
+    // Definition der zu überprüfenden Felder je nach aktueller Seite
+    const fieldNames = [ 
+    currentPage === 0 && ["mainTraveler.firstName", "mainTraveler.lastName", ...],
+    currentPage === 1 && [ // Weitere Felder für Seite 1 ]
+    ].filter(Boolean).flat();
+    [Eigentliche Validierung]
+};
+\end{lstlisting}
+
+Diese Methode sorgt dafür, dass nur die Felder überprüft werden, die zur aktuellen Seite gehören. Falls alle Eingaben gültig sind, wird das Formular zur nächsten Seite weitergeführt, andernfalls erhält der Benutzer entsprechende Fehlermeldungen.
+
+\subsection{Dynamische Formularerstellung}
+Da das Formular Daten für eine spezifische Buchung erfassen muss, muss dieses in einer gewissen Form einzigartig sein. Das passiert in erster Linie über URL-Parameter. Folgend wird erläutert, wie dies geschieht und wie das Frontend folgend mit dem Backend kommuniziert.
+
+\newpage
+
+\subsubsection{Identifikation per URL-Parameter}
+In der Mitarbeiteransicht wird manuell ein einzigartiger Link erstellt, welcher alle Daten enthält, um die nötige Buchung im System zu erstellen. Diese Daten werden mittels des URL-Parameters ''data'' Base64 verschlüsselt übergeben. Die Daten werden nach folgendem JSON-Schema verarbeitet:
+\begin{lstlisting}[language=JavaScript]
+{
+    "accommodationId": 1,
+    "checkIn": "2025-07-26T00:00:00.000Z",
+    "expectedCheckOut": "2025-07-30T00:00:00.000Z"
+}
+\end{lstlisting}
+
+Beim Aufruf des Formulars in der Buchungsregistrierungsansicht werden die benötigten Daten aus der URL ausgelesen, entschlüsselt und anschließend in den State-Variablen der Komponente gespeichert. Dies geschieht mithilfe der Methode ''decodeUrlParams''. Das Auslesen der verschlüsselten Daten erfolgt mit folgendem Code:
+
+\begin{lstlisting}[language=JavaScript]
+const encodedData = searchParams.get("data"); 
+const urlParams = decodeUrlParams(encodedData);
+\end{lstlisting}
+
+Die Entschlüsselung selbst wird durch folgende Zeilen durchgeführt:
+
+\begin{lstlisting}[language=JavaScript]
+const decodedString = atob(encodedData);
+const parsedData = JSON.parse(decodedString);
+\end{lstlisting}
+
+Hierbei wird die Methode ''atob'' verwendet, die in JavaScript zur Base64-Dekodierung genutzt wird. Dadurch wird der zuvor kodierte JSON-String wieder in eine lesbare Form umgewandelt.  
+
+Da diese Daten für die Formularanzeige essenziell sind, wird überprüft, ob sie erfolgreich geladen wurden. Falls nicht, erfolgt eine automatische Weiterleitung auf die Fehlerseite, wie in \ref{sec:errorHandling} beschrieben.  
+
+\subsubsection{Backend-Kommunikation}
+\label{sec:backendCom}
+
+Die Buchungsregistrierungsansicht kommuniziert an mehreren Stellen mit dem Backend. Eine detaillierte API-Dokumentation ist in Kapitel \ref{sec:apiDokumentation} zu finden. Die folgende Erklärung beschreibt die wichtigsten Interaktionen:
+
+\paragraph{Abruf der Buchungsinformationen}
+Zunächst werden anhand der ''accommodationId'' die nötigen Daten vom Backend angefragt. Auf der ersten Seite des Formulars werden die Buchungsdetails wie Unterkunftsinformationen sowie An- und Abreisedaten angezeigt. Dafür wird der React-Hook ''useEffect'' verwendet, der Code nach dem Rendern der Komponente ausführt:
+
+\begin{lstlisting}[language=JavaScript]
+useEffect(() => {
+    if (!urlParams) return;
+    fetch(`
+    http://localhost:8080/api/v1/accommodations/${urlParams.accommodationId}`)
+    .then((res) => res.ok ? res.json() : Promise.reject())
+    .then(setAccommodationDetails)
+    .catch(() => router.push("/error?code=400"));
+}, [urlParams?.accommodationId]);
+\end{lstlisting}
+
+Hier wird geprüft, ob die URL-Parameter vorhanden sind. Falls ja, wird eine Anfrage an das Backend gesendet. Erfolgreiche Antworten werden gespeichert, während Fehler zur Fehlerseite weiterleiten. Aus Gründen der Übersichtlichkeit wurde detailliertes Error-Handling im Text weggelassen.
+
+\paragraph{Auswahl des Formulars}
+Anhand der vom Backend erhaltenen Antwort wird das Land der Unterkunft extrahiert. Basierend auf dieser Information wird dynamisch entschieden, welches der länderspezifischen Formulare (Österreich oder Italien) dem Benutzer angezeigt wird.
+
+\paragraph{Datenübermittlung}
+Beim Absenden des Formulars wird die finale Kommunikation mit dem Backend durchgeführt. Dies geschieht in der Methode ''onSubmit'', die – wie in \ref{sec:formularsteuerung} beschrieben – durch den ``Abschicken``-Button ausgelöst wird. Dabei werden die Daten zunächst in das vom Backend erwartete Format umgewandelt und anschließend per API gesendet:
+
+\begin{lstlisting}[language=JavaScript]
+const onSubmit = async (data: FormValues) => {
+    ...
+    const response = await fetch("http://localhost:8080/api/v1/bookings", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(parsedData)
+    });
+    
+    // Erfolgreiche Antwort verarbeiten
+    const result = await response.json();
+    router.push("/tenantRegistration/registrationComplete"); // Erfolgsseite anzeigen
+    return result;
+    ...
+};
+\end{lstlisting}
+
+\subsection{Error-Handling}
+\label{sec:errorHandling}
+
+Das Error-Handling erfolgt über eine dedizierte Fehlerseite, die anhand eines über die URL übermittelten Fehlercodes die entsprechende Fehlermeldung anzeigt. Dazu enthält die Komponente eine Konstante, in der Fehlercodes mit den dazugehörigen Titeln und Nachrichten gespeichert sind. Ein Auszug dieser Konstante sieht folgendermaßen aus:
+
+\begin{lstlisting}[language=JavaScript]
+const errorMessages: Record<number, { title: string; message: string }> = {
+    400: {
+        title: 'Ungültige Anfrage',
+        message: 'Die angeforderte Seite kann nicht verarbeitet werden, da erforderliche Daten fehlen.',
+    },
+    401: {
+    ...
+		\end{lstlisting}
+		
+		Der Fehlercode wird aus den URL-Parametern ausgelesen und anschließend zur Auswahl der passenden Fehlermeldung verwendet:
+		
+\begin{lstlisting}[language=JavaScript]
+const code = parseInt(searchParams.get('code') || '500', 10);
+const { title, message } = errorMessages[code] || defaultError;
+		\end{lstlisting}
+		
+		Falls kein Fehlercode in der URL vorhanden ist, wird standardmäßig der Code \texttt{500} verwendet. Anschließend wird der Fehlertext aus der definierten Konstante geladen.
+		
+		Die Darstellung der Fehlermeldung erfolgt in einer einfachen ''Card''-Komponente aus ''shadcn/ui''. Dabei wird der ''title'' als Header, der Fehlercode in der Mitte und die zugehörige Nachricht als Footer angezeigt. Zusätzlich gibt es einen Button, der über die Methode ''handleGoBack'' den Benutzer auf die vorherige Seite zurückführt:
+		
+\begin{lstlisting}[language=JavaScript]
+const handleGoBack = () => router.back();
+		\end{lstlisting}
+		
+\subsection{Internationalisierung}
+Internationalisierung, oft als I18n abgekürzt, beschreibt den Vorgang, eine Software so anzupassen, dass sie ohne großen Aufwand für verschiedene Sprachen, Kulturen und regionale Besonderheiten eingesetzt werden kann. Dabei geht es nicht nur um die Übersetzung von Texten, sondern auch um die Berücksichtigung von Datumsformaten, Zahlenformate, Währungen oder die Schreibrichtung.
+Im Rahmen dieser Arbeit konzentriert sich die Internationalisierung hauptsächlich auf die Anpassung der sprachlichen Inhalte der Benutzeroberfläche. Aktuell ist die Webseite auf Deutsch und Englisch verfügbar, wobei die grundlegende Systemarchitektur es ermöglicht, weitere Sprachen ohne großen Aufwand hinzuzufügen.
+
+\subsubsection{Umsetzung}
+Für die Internationalisierung wurde die Bibliothek ''next-intl'' verwendet, wie bereits in Abschnitt \ref{sec:verwendeteTechnologien} erwähnt. Diese Bibliothek ermöglicht eine effiziente und flexible Verwaltung von Übersetzungen in \gls{nextjs}-Projekten.
+
+\paragraph{Konfiguration}
+Die Konfiguration von ''next-intl'' erfolgt hauptsächlich in der Datei ''/i18n/requests.ts''. Hier werden die unterstützten Sprachen definiert und eine Standardsprache festgelegt. Zusätzlich wird die Auswahl der Sprache im Cache gespeichert, um eine konsistente Benutzererfahrung zu gewährleisten.
+
+\paragraph{Sprachdateien}
+Die eigentlichen Übersetzungen werden in separaten JSON-Dateien gespeichert, die sich im Verzeichnis ''messages/'' befinden. Für jede unterstützte Sprache gibt es eine eigene Datei (z.B. ''de.json'' für Deutsch und ''en.json'' für Englisch). Diese Dateien enthalten Schlüssel-Wert-Paare, wobei der Schlüssel als Referenz in den React-Komponenten dient und der Wert die entsprechende Übersetzung darstellt.
+
+Ein Beispiel für den Aufbau einer solchen JSON-Datei ist:
+
+\begin{lstlisting}[language=JavaScript]
+{
+    "submit": "Abschicken",
+    "title": "Mieter Registrierung",
+    ...
+}
+\end{lstlisting}
+
+\paragraph{Verwendung in React-Komponenten}
+In den React-\gls{components} werden die lokalisierten Texte über den Hook ''useTranslations()'' von ''next-intl'' geladen. Dieser Hook stellt eine Funktion bereit, die anhand des Schlüssels die entsprechende Übersetzung aus der aktiven Sprachdatei zurückgibt.
+
+\newpage
+
+Anstatt statische Zeichenketten direkt im Code zu verwenden, wird die Übersetzung dynamisch aus den JSON-Dateien geladen:
+
+\begin{lstlisting}[language=JavaScript]
+function MyComponent() {
+  const t = useTranslations();
+
+  return (
+    <button type="submit">{t('submit')}</button>
+  );
+}
+\end{lstlisting}
+
+\paragraph{Sprachauswahl}
+Die Sprachauswahl für den Benutzer wurde durch eine einfache Schaltfläche in der Navigationsleiste realisiert. Durch Klicken auf diese Schaltfläche kann der Benutzer zwischen den verfügbaren Sprachen wechseln. \textit{next-intl} übernimmt dabei die Aktualisierung der Benutzeroberfläche mit den entsprechenden Übersetzungen.
+
+\paragraph{Erweiterbarkeit}
+Dank der modularen Implementierung von \textit{next-intl} ist es relativ einfach, weitere Sprachen hinzuzufügen. Dazu müssen lediglich neue JSON-Dateien mit den entsprechenden Übersetzungen erstellt und in der Konfigurationsdatei \texttt{/i18n/requests.ts} registriert werden.
+
+Die vollständige Implementierung der Internationalisierung ist im GitHub-Repository \cite{equilibriaSharingFrontend} zu finden.
+
+\subsection{Zusammenfassung der Implementierung}
+    
+    \subsubsection{Ergebnisse}
+    Die Implementierung des Formularsystems hat die gesetzten Ziele weitgehend erreicht. Die grundlegende Funktionalität wurde erfolgreich umgesetzt, und die Benutzer können Daten gemäß den rechtlichen Anforderungen der Länder Österreich und Italien erfassen.
+    Die Strukturierung des Frontends sowie die Nutzung moderner Technologien wie \gls{nextjs}, React Hook Form und Zod haben eine solide Basis für das Projekt geschaffen. Folgend werde ich meine Herausforderungen reflektieren und einen Ausblick auf Verbesserungen geben.
+    
+    \subsubsection{Reflexion}
+    Im Rahmen der Reflexion wurden verschiedene Aspekte der Implementierung analysiert, um Herausforderungen und Problembereiche zu identifizieren:
+    
+    \begin{enumerate}
+        \item \textbf{Validierung:}
+        \begin{itemize}
+            \item Leicht Fehlerhafte Validierungen führen dazu, dass ungültige Daten akzeptiert werden, was die Datenqualität beeinträchtigen könnte.
+            \item Zu allgemeine Feedback-Meldungen bei fehlerhaften Eingaben erschwerten es den Benutzern, Fehler zu erkennen und zu korrigieren.
+        \end{itemize}
+        \item \textbf{Sicherheit:}
+        \begin{itemize}
+            \item Die Verarbeitung von URL-Parametern war nicht optimal, was Manipulationen ermöglicht, aber jedoch nicht zu Datenlecks führen kann.
+        \end{itemize}
+    \end{enumerate}
+
+    \newpage
+
+    \subsubsection{Ausblick}
+    Das Projekt bietet eine solide Grundlage für zukünftige Weiterentwicklungen. Folgende Punkte sollten in den nächsten Schritten berücksichtigt werden:
+    
+    \begin{enumerate}
+        \item \textbf{Sicherheitstechnische Verbesserungen:}
+        \begin{itemize}
+            \item Implementierung sicherer Mechanismen zur Verarbeitung von URL-Parametern.
+        \end{itemize}
+    
+        \item \textbf{Erweiterte Validierung:}
+        \begin{itemize}
+            \item Verbesserung der Feedback-Meldungen bei fehlerhaften Eingaben, um Benutzern klarere Hinweise zu geben.
+        \end{itemize}
+    
+        \item \textbf{Usability-Optimierung:}
+        \begin{itemize}
+            \item Durchführung von Usability-Tests mit Zielgruppen, um Schwachstellen zu identifizieren und gezielt zu beheben.
+            \item Bereitstellung der Website in Italienisch für die Verwendung in Italien.
+        \end{itemize}
+    
+        \item \textbf{Integration in Unternehmensworkflows:}
+        \begin{itemize}
+            \item Anpassung an spezifische Anforderungen eines Unternehmens (z. B. automatisierte Datenübertragung an interne Systeme).
+            \item Berücksichtigung von Feedback aus der Praxis zur kontinuierlichen Verbesserung des Systems.
+        \end{itemize}
+    \end{enumerate}
+    
+    Die Reflexion und der Ausblick verdeutlichen, dass das Projekt eine solide Basis bietet, jedoch noch Raum für Optimierungen besteht. Durch gezielte Weiterentwicklung kann das Formularsystem zu einem robusten und benutzerfreundlichen Tool werden, welches den Workflow der Auftraggeberfirma massiv optimieren kann. \cite{prompt27_pollak}

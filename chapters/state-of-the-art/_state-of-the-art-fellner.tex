@@ -1,0 +1,68 @@
+\section{Vorhandene Backend-Technologien}
+
+Für das Projekt stehen die folgenden populären Technologien zur Verfügung: \textbf{Django}, \textbf{Flask}, \textbf{ExpressJS} und \textbf{Spring Boot}. Diese bilden die Grundpfeiler der Entwicklung weltweit und werden von unzähligen Organisationen aktiv verwendet und empfohlen, wie unter \cite{website-popular-backend-framework} ersichtlich ist. Siehe Prompt \cite{prompt-gpt-list-to-text-individual}.
+
+\subsection{Django}
+Django ist ein \gls{full-stack-framework}, das durch seinen umfassenden Funktionsumfang zahlreiche Anwendungsfälle abdeckt. Eine gute Übersicht darüber lässt sich unter \cite{website-django-functionality-summary} finden. Die Implementierung gestaltet sich relativ einfach, da zahlreiche Anleitungen und Ressourcen im Internet verfügbar sind. Allerdings weist Django einen erhöhten Arbeitsaufwand beim Erlernen auf, was insbesondere bei Einsteigern einen erhöhten Einarbeitungsaufwand erfordert.
+
+Das Projektteam verfügt über solide Kenntnisse in der Programmiersprache Python, wodurch die Nutzung des Frameworks erleichtert wird. Hinsichtlich der Skalierbarkeit bietet Django viele Optionen, jedoch stellt die monolithische Architektur des Frameworks eine gewisse Einschränkung dar. Skalierungsmaßnahmen erfordern in der Regel Anpassungen am gesamten Projekt, was zeitaufwendig sein kann.
+
+Ein großer Vorteil von Django liegt im Bereich der Sicherheit (siehe \cite{website-django-security-summary}). Das Framework enthält bereits integrierte Schutzmaßnahmen gegen gängige Web-Angriffe wie \gls{sql-injection} und \gls{xss-attack}. Darüber hinaus bietet es unter anderem Funktionen wie Passwort-Hashing und vorgefertigte Bibliotheken für die Authentifizierung und Autorisierung an.
+
+In Bezug auf die Performance verfügt Django über eine automatische \gls{caching}-Funktion \cite{website-django-caching}, die eine effiziente Verarbeitung von Hintergrundprozessen ermöglicht. Allerdings bringt der große Funktionsumfang eine höhere Ressourcenbelastung mit sich. 
+
+Die Community rund um Django ist äußerst aktiv. Auf \cite{website-stackoverflow-django} gibt es über 312.000 beantwortete Fragen zu diesem Framework, was die Qualität des Community-Supports unterstreicht. Zudem ist die offizielle Dokumentation von Django umfangreich und gut strukturiert, was die Einarbeitung erleichtert. \cite{website-django-docs}
+
+Ein weiterer Vorteil von Django ist die einfache Integration als reines Backend über das \textit{Django REST Framework}, siehe \cite{website-django-rest-framework}. Das Framework unterstützt nahezu alle relationalen Datenbanken, was es vielseitig einsetzbar macht.
+
+
+\subsection{Flask}
+Flask ist ein leichtgewichtiges Micro-Framework, das sich durch seine kompakte Größe und hohe Flexibilität auszeichnet, was \cite{website-flask-overview} noch einmal unterstreicht. Die Implementierung gestaltet sich sehr einfach, da das Framework nur wenige Abhängigkeiten mitbringt und eine minimale Grundstruktur erfordert. Dies erleichtert den Einstieg in die Entwicklung. Das von Flask selbst bereitgestellte Tutorial (siehe \cite{website-flask-tutorial}) bietet einen guten Überblick über diesen schnellen Einstieg. 
+
+Wie bei Django basiert Flask auf der Programmiersprache Python, was für das Projektteam von Vorteil ist. Die Nutzung bekannter Sprachstrukturen führt zu einer schnellen und effizienten Entwicklung.
+
+Flask unterstützt eine Microservice-Architektur, die eine flexible Skalierbarkeit ermöglicht. Einzelne Dienste können unabhängig voneinander erstellt und erweitert werden. Allerdings bringt die geringe Anzahl integrierter Funktionen auch Herausforderungen mit sich: Für größere Projekte ist Flask weniger geeignet, da viele Funktionen manuell ergänzt werden müssen.
+
+Hinsichtlich der Sicherheit bietet Flask grundlegende Mechanismen, jedoch müssen diese größtenteils vom Entwickler konfiguriert werden. Dies erhöht den Aufwand für die Absicherung der Anwendung. Eine Bibliothek, welche von einem Drittanbieter zur Verfügung gestellt wird, wäre zum Beispiel Flask Security (sieh \cite{website-flask-security}).
+
+Flask überzeugt mit seiner Performance. Aufgrund der kompakten Struktur und der einfachen Architektur ist das Framework äußerst ressourcenschonend und performant.
+
+Die Community von Flask ist ebenfalls groß, allerdings wird kein offizieller Hersteller-Support angeboten. Auf Stackoverflow, siehe \cite{website-stackoverflow-flask}, sind über 55.000 Fragen zum Framework beantwortet worden, was die Verfügbarkeit von Community-Ressourcen bestätigt.
+
+In Bezug auf die Dokumentation ist Flask zwar gut dokumentiert, jedoch weniger umfassend als andere Frameworks wie Django. Die Integration mit dem Frontend erfolgt meist über den \textit{API-First-Ansatz}, bei dem spezifische API-Endpunkte definiert werden. Dies bietet eine hohe Flexibilität bei der Anbindung von relationalen Datenbanken.
+
+
+\subsection{ExpressJS}
+ExpressJS ist ein Backend-Framework, das auf Node.js basiert und sich durch seine Einfachheit und Flexibilität auszeichnet (siehe \cite{website-expressjs}). Die Implementierung erfolgt weitgehend unkompliziert, erfordert jedoch an einigen Stellen manuelle Konfigurationen, um bestimmte Funktionen zu aktivieren.
+
+Die Programmiersprache von ExpressJS ist JavaScript, welches vom gesamten Projektteam beherrscht wird. Allerdings sind spezifische Kenntnisse in Node.js noch nicht umfassend vorhanden. Dennoch erleichtert die Vertrautheit mit JavaScript den Einstieg in die Entwicklung.
+
+In Bezug auf die Skalierbarkeit bietet ExpressJS viele Optionen, wie in \cite{website-express-scaling} beschrieben wird. Die Nutzung von externen Bibliotheken sowie die Unterstützung von asynchronen Prozessen ermöglicht es, Anwendungen flexibel zu erweitern. Diese Skalierbarkeit ist besonders wichtig für größere Anwendungen.
+
+Die Sicherheit in ExpressJS hängt stark von den implementierten Sicherheitsmaßnahmen des Entwicklers ab. Zwar gibt es viele verfügbare Bibliotheken für die Absicherung, jedoch sind diese nicht von Haus aus in das Framework integriert. Eine Übersicht der verfügbaren Maßnahmen findet man unter \cite{website-express-security}.
+
+Ein großer Vorteil von ExpressJS ist die Performance. Dank der asynchronen Prozessverarbeitung von Node.js werden Anfragen nicht sequenziell, sondern parallel bearbeitet. Dies führt zu einer erheblichen Beschleunigung der Verarbeitungsgeschwindigkeit.
+
+Die Community rund um ExpressJS ist sehr aktiv. Auf Stackoverflow wurden über 95.000 Fragen zu dem Framework beantwortet, siehe \cite{website-stackoverflow-expressjs}. Die offizielle Dokumentation ist zwar vorhanden, aber oft nicht ausreichend, um komplexe Anwendungen ohne zusätzliche Quellen von Drittanbietern zu entwickeln.
+
+Die Integration mit dem Frontend erfolgt über die Erstellung von REST-APIs, was den Datenaustausch zwischen Frontend und Backend vereinfacht.
+
+
+\subsection{Spring Boot}
+Spring Boot ist ein modernes Framework, das auf der Programmiersprache Java basiert und durch seine Service-orientierte Architektur überzeugt. \cite{website-springboot} Die Implementierung gestaltet sich besonders einfach, da Spring Boot zahlreiche Funktionen bereitstellt. Mithilfe des \textit{Spring Initializr} \cite{website-spring-initializr} können Projektstrukturen automatisch generiert werden, was den Einstieg erheblich erleichtert.
+
+Das Projektteam verfügt über fundierte Kenntnisse in Java, da diese Programmiersprache im Unterricht umfassend behandelt wurde. Dadurch lässt sich Spring Boot effizient nutzen.
+
+Die Skalierbarkeit von Spring Boot ist hervorragend. \cite{website-spring-scaling} Aufgrund der service-orientierten Architektur können einzelne Services unabhängig voneinander erstellt und erweitert werden. Dies ähnelt der Microservice-Architektur und ermöglicht es, komplexe Anwendungen modular zu gestalten.
+
+Spring Boot überzeugt im Bereich der Sicherheit durch die Erweiterung \textit{Spring Security} \cite{website-spring_security}, die Authentifizierungs- und Autorisierungsfunktionen integriert. Diese Sicherheitsmaßnahmen entsprechen aktuellen Industriestandards. \cite{website-security-industry-standards}
+
+In Bezug auf die Performance bietet Spring Boot solide Ergebnisse. Die service-orientierte Architektur in Kombination mit Java als Programmiersprache sorgt, im Vergleich zu Django, für eine hohe Verarbeitungsgeschwindigkeit und Stabilität (siehe \cite{website-performance-spring-boot-vs-django}).
+
+Die Community von Spring Boot ist groß und aktiv. Laut \cite{website-stackoverflow-spring-boot} sind über 212.000 Fragen zu dem Framework beantwortet worden, was auf eine starke Unterstützung durch die Community hinweist.
+
+Schließlich überzeugt Spring Boot mit einer umfangreichen und übersichtlichen Dokumentation, die Entwicklern eine klare Orientierung bietet. \cite{website-spring-docs} Die Integration mit anderen Technologien ist durch die modulare Struktur des Frameworks einfach möglich, was die Anbindung an Frontend-Systeme und Datenbanken erleichtert. 
+
+\newpage
+
+

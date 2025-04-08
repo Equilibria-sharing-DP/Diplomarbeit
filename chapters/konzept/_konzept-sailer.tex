@@ -1,0 +1,69 @@
+\section{Konzept zur Umsetzung der Datenbank}
+\subsection{Einleitung}
+Das Ziel dieses Konzepts ist die Bereitstellung eines Datenbanksystems (MariaDB) zur persistenten Speicherung der Daten und die Entwicklung eines Systems, welches Buchungsdaten aus der genannter Datenbank  exportieren kann. Es solle sowohl \textbf{CSV-} als auch \textbf{PDF-Dateien} bereitgestellt werden. Die Datenbankstruktur basiert auf dem ERD (Abbildung 7.3) und die Implementierung erfolgt wie der Rest des Backends mit \textbf{Java Spring} als Framework.
+
+
+\vspace{3mm}
+\makefig{images/ERD.png}{height=7cm}{ ERD }{fig:caption-label}
+
+
+
+\noindent Das \gls{ac-erd}(siehe Abbildung 7.3) bildet die Grundlage für das relationale Schema in MariaDB. Es beschreibt, wie die einzelnen Tabellen miteinander verbunden sind. Die Tabellen sind normalisiert (\gls{3. Normalform}), um Redundanz zu minimieren und Datenintegrität sicherzustellen: 
+
+\begin{itemize}
+	\item \textbf{Primärschlüssel}: Jede Tabelle verfügt über einen eindeutigen Primärschlüssel
+	\item \textbf{Fremdschlüssel}: Beziehungen zwischen Entitäten werden durch Fremdschlüssel abgebildet
+	\item \textbf{Indexierung}: Häufig abgefragte Felder, wie \textit{checkIn} und \textit{accomadationid} werden indexiert, um die Abfragegeschwindigkeit zu erhöhen.
+\end{itemize}
+
+\subsection{Technologien und Bibliotheken}
+Für die Umsetzung werden folgende Technologien und Bibliotheken verwendet:
+\begin{itemize}
+	\item \textbf{MariaDB:} Speicherung der Daten
+	\item \textbf{Java Spring Framework:} Entwicklung des Backends.
+	
+\end{itemize}
+
+\subsection{Architektur und Ablauf}
+\subsubsection{Modularer Aufbau}
+Das System wird in folgende Module aufgeteilt:
+\begin{enumerate}
+	\item \textbf{Datenbankmodul:} 
+	\begin{itemize}
+		\item Verbindung zur MariaDB-Datenbank
+		\item Entitäten: \texttt{Booking}, \texttt{Person}, \texttt{Address}, \texttt{TravelDocument}, etc.
+	\end{itemize}
+	
+	\item \textbf{Exportmodul:}
+	\begin{itemize}
+		\item CSV-Export: Generierung von CSV-Dokumenten
+		\item PDF-Export: Generierung von PDF-Dokumenten
+	\end{itemize}
+	
+	\item \textbf{API-Modul:} 
+	\begin{itemize}
+		\item Bereitstellung von Endpunkten für den Export (\texttt{/export/csv}, \texttt{/export/pdf}).
+	\end{itemize}
+\end{enumerate}
+
+\newpage
+\subsubsection{Ablaufdiagramm für den Export}
+Die nachfolgenden Schritte beschreiben, das in Abbildung 7.4 dargestellte Ablaufdiagramm:
+\begin{itemize}
+	\item \textbf{Schritt 1:} Der Benutzer sendet eine Anfrage (HTTP GET) an die API mit den gewünschten Filterparametern (z. B. Zeitraum, Unterkunft, etc.).
+	\item \textbf{Schritt 2:} Das Backend ruft die Daten aus der MariaDB-Datenbank ab.
+	\item \textbf{Schritt 3:} Die Daten werden in das gewünschte Format (CSV oder PDF) umgewandelt.
+	\item \textbf{Schritt 4:} Die generierte Datei wird dem Benutzer als Download bereitgestellt.
+\end{itemize}
+
+\makefig{images/Ablaufdiagramm.png}{height=15cm}{ Ablaufdiagramm des Exports }{fig:caption-label}
+
+
+
+\subsection{Zusammenfassung}
+
+Basierend auf der Nutzwertanalyse und den spezifischen Anforderungen des Projekts erweist sich \textbf{MariaDB} als die am besten geeignete Wahl (siehe Tabelle 6.4). Sie bietet eine hervorragende Balance zwischen Performance, Skalierbarkeit und Kosten, unterstützt durch die Vorteile einer großen Community und kostenfreier Verfügbarkeit. Während PostgreSQL besonders bei komplexen relationalen Abfragen überzeugt, ist MongoDB mit ihrer hohen Flexibilität und Skalierbarkeit auf unstrukturierte Daten spezialisiert – Eigenschaften, die in diesem Projekt jedoch nicht erforderlich sind. Amazon Aurora sticht durch exzellente Cloud-Integration und Zuverlässigkeit hervor, wurde jedoch aufgrund der hohen Kosten nicht priorisiert.
+
+\vspace{2mm}
+
+\noindent Die abschließende Bewertung durch die Nutzwertanalyse bestätigt \textbf{MariaDB} als die beste Wahl für dieses Projekt. Sie ermöglicht nicht nur eine solide und kosteneffiziente Lösung, sondern erfüllt die Anforderungen optimal, insbesondere im Hinblick auf die effiziente und \textbf{persistente} Speicherung von Buchungsdaten. Zudem unterstützt das Konzept den Export in \textbf{CSV-} und \textbf{PDF-Dateien}, wobei es flexibel und skalierbar genug ist, um zukünftige Erweiterungen wie zusätzliche Exportformate (z. B. Excel) oder Filteroptionen problemlos zu integrieren. (Prompt \cite{ChatGPT:rewrite4})

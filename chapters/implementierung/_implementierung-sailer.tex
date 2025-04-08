@@ -1,0 +1,398 @@
+\section{Implementierung der Datenbank}
+Alle relevanten Codeteile, sowie zusätzliche Dokumentationen sind im GitHub Repository verfügbar, das unter dem folgenden Verweis zugänglich ist: \cite{git:Eq}. In diesem Repository finden sich sowohl die Quellcodes für die Implementierung als auch ergänzende Dateien, die zur Dokumentation und zum besseren Verständnis des Projekts beitragen.
+
+\subsection{Datenbankrealisierung}
+\subsubsection{Erstellung der Datenbank}
+Aufgrund der im Backend getroffenen Entscheidung für das Java-Framework \textit{Spring Boot} ging es bei der Implementierung des Projekts mehr um die Architektur, als die praktische Umsetzung der Datenbank. Während der konkreten Entwicklung des Projekts wurden zudem einige Optimierungsmöglichkeiten bemerkt und umgesetzt. Die eigentliche Erstellung der Datenbank erfolgt automatisch durch \gls{Docker} (weiteres dazu unter \hyperref[sec:deployment]{Deployment}). Die Tabellen werden anschließend durch Spring Boot und den geschriebenen Code automatisch generiert.
+
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: Erstellung einer Tabelle in der Datenbank.}]
+@Entity
+public class Person {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Enumerated(EnumType.STRING)
+	private TravelDocumentType type;
+	@ManyToOne
+	private Address address;
+			
+\end{lstlisting}
+	
+	\noindent \textit{Baeldung} \cite{SB:Database} beschreibt, dass die Erstellung der Tabellen in Spring Boot automatisch durch Klassen erfolgt, die mit \textit{@Entity} gekennzeichnet sind. Der in Abbildung 8.26 dargestellte Code ist ein Beispielcode, der zur Veranschaulichung des Systems dient und in dieser Form nicht im Projekt enthalten ist. Der \textit{@Id}-Tag definiert den Primary-Key, welcher das erzeugte Objekt eindeutig identifizierbar macht. Der \textit{@ManyToOne} Tag zeigt an, dass eine Adresse mehreren Personen zugeordnet sein kann. Gleichzeitig dient er als Foreign-Key, was bedeutet, dass dieses Attribut eine eindeutige Referenz auf ein Objekt einer anderen Tabelle enthält.
+	
+	\newpage
+	\subsubsection{Manipulation der Datenbank}
+	\noindent Um nun der Datenbank einen neuen Eintrag hinzufügen zu können, verwendet Spring Boot das Spring Data JPA-Framework, welches das Arbeiten mit \gls{ac-CRUD} Operationen stark vereinfacht. Sogenannte Repositories sind Interfaces, mit denen sich Datenbankoperationen durchführen lassen, ohne dass man manuell SQL-Abfragen schreiben muss.
+	
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: Repository.}]
+@Repository
+public interface BookingRepository extends
+JpaRepository<Booking, Long> {
+	List<Booking> findAllByCheckInBetween(LocalDateTime beginDate,
+	LocalDateTime endDate);
+}
+			
+\end{lstlisting}
+	
+	\noindent Abbildung 8.27 stellt das Repository dar, welches als Schnittstelle zwischen der Datenbank und dem Backend dient. Über dieses Repository erfolgen Interaktionen mit der Datenbank. Es gibt zwei Möglichkeiten, um mit der Datenbank zu kommunizieren. 
+	
+	\begin{enumerate}
+		\item Durch Angabe des entsprechenden Methodennamens, wie im Beispiel in Abbildung 8.27 dargestellt.
+		\item Alternativ kann ein Repository-Objekt erstellt werden, über das, wie in Abbildung 8.28 gezeigt, verschiedenste Methoden aufgerufen werden können.
+	\end{enumerate}
+	
+	
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: Methoden-Aufrufe}]
+personRepository.save(mainTraveler);
+bookingRepository.findById(id)
+bookingRepository.deleteById(id);
+\end{lstlisting}
+	
+	\vspace{3mm}
+	\noindent Damit ist es nun möglich, sämtliche vom Frontend übermittelten Daten direkt über den Code in der Datenbank zu speichern.
+	
+	\subsubsection{Datenbankstruktur}
+	\makefig{images/uml.png}{height=10cm}{ERD der Datanbank des Projekts}{fig:caption-label}
+	
+	\noindent Im Gegensatz zu dem im Konzept erstelltem Diagramms wurden noch weitere Attribute hinzugefügt und die Namen vereinheitlicht. Jede dieser Kachel wird im Backend durch eine eigene Klasse repräsentiert. 
+	
+	
+	
+	\subsection{Buchungsprotokolle}
+	\subsubsection{Controller}
+	\noindent Der `ProtocolController` ist die zentrale Klasse zur Verarbeitung eingehender HTTP-Anfragen und zur Generierung von Protokollen in verschiedenen Formaten. Dabei ruft er relevante Buchungsdaten aus der Datenbank ab und verarbeitet sie entsprechend den Parametern der Anfrage.  
+	
+	\noindent Die Details einer Anfrage werden über die URL übermittelt. Ein Beispielaufruf könnte folgendermaßen aussehen:  
+	
+	\begin{center}
+		\texttt{http://localhost:8080/api/v1/protocol?\textbf{format}=csv\&\textbf{accommodationID}=all\&\textbf{beginDate}=
+			2025-01-01\&\textbf{endDate}=2025-02-28}
+	\end{center}
+	
+	\noindent Die übergebenen Parameter aus dem Frontend bestimmen das Format, sowie die gewünschte Unterkunft und welche Datumsspanne das Protokoll abdecken soll.  
+	\newpage
+	\noindent \textbf{Parameter: accommodationID=} \vspace{3mm}\newline 
+	\noindent Wie in Abbildung 8.29 dargestellt, kann über die \textbf{accommodationID} eine spezifische Unterkunft für das Protokoll ausgewählt werden.
+	
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: Buchungen Laden mit Unterkunft.}]
+bookingList = this.bookingRepository.findByDatumBetweenAndWert(
+Integer.parseInt(accommodationID), beginDateTime, endDateTime);
+\end{lstlisting}
+	
+	\noindent Falls jedoch \textbf{\enquote{all}} übergeben wird, werden alle Buchungen im angegebenen Zeitraum berücksichtigt. Hierfür wird die zweite, im Interface definierte, Methode aufgerufen, die alle Buchungen, welche den CheckIn Zeitraum zwischen den übergebenen Parametern hat, bereitstellt. Siehe dazu Abbildung 8.30.
+	
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: Buchungen Laden.}]
+if(accomodationID=="all"){
+	bookingList = this.bookingRepository.findAllByCheckInBetween(
+	beginDateTime, endDateTime);
+}
+\end{lstlisting}
+
+	\vspace{3mm}
+	\noindent \textbf{Parameter: format=}\vspace{3mm}\newline
+	Zusätzlich dazu kann mithilfe des Format-Parametes angegeben werden, welches Dateiformat exportiert werden soll. Wobei zwischen folgenden 3 Dateitypen entschieden werden kann:
+	
+	\vspace{3mm}
+	\begin{itemize}
+		\item \textbf{PDF} – Generiert das Protokoll als PDF-Datei, ideal für den Druck oder die Archivierung.  
+		\item \textbf{CSV} – Exportiert das Protokoll als CSV-Datei, welches einen strukturierten Überblick gibt.
+		\item \textbf{XLSX} – Erstellt das Protokoll als Excel-Datei, optimal für strukturierte Datenanalysen.  
+	\end{itemize}
+	
+	
+	\vspace{3mm}
+	\noindent \textbf{Parameter: beginDate \& endDate=}\vspace{3mm}\newline
+	Diese beiden Parameter legen den Zeitraum fest, für den das Protokoll erstellt werden soll. Dabei wird das Ankunftsdatum verwendet, das sowohl in der Datenbank als auch im Code als \textit{LocalDateTime} gespeichert ist.
+	
+	\vspace{3mm}
+	\noindent \textbf{Weiterverarbeitung}\vspace{3mm}\newline
+	Mithilfe des ausgelesenen Formates und einem if-Statement werden dann die Daten, welche sich in der \textit{bookingList} befinden, an die entsprechende Methode weitergeleitet.
+	\newpage
+	\subsubsection{PDF}
+	Um ein PDF mittels Java zu generieren, wird die 'itextpdf' Library verwendet. Um diese nutzen zu können, muss die benötigte Dependency in die \textit{pom.xml}-Datei hinzugefügt werden. Die Implementierung der Methode \textit{getPDF()} ist auf mehrere Methoden aufgeteilt, um nicht nur eine übersichtliche und gut formatierte PDF-Datei zu erzeugen, sondern auch den dafür benötigten Code so lesbar wie möglich zu machen.
+	
+	\vspace{3mm}
+	\noindent Die Idee besteht darin, jede Buchung auf einer separaten Seite darzustellen. Dies verbessert die Lesbarkeit und Struktur des Dokuments. Das Erstellen des PDF-Dokuments selbst erfolgt direkt in der Methode \textit{getPDF()}, während die Gestaltung und Befüllung des Inhalts durch ausgelagerte Methoden realisiert wird. Dies fördert die Wartbarkeit, Wiederverwendbarkeit und Flexibilität des Codes.
+	
+	\vspace{3mm}
+	In Abbildung 8.31 wird gezeigt wie das PDF zunächst erzeugt wird und anschließend in Querformat (Landscape-Modus) gesetzt wird:
+	
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: PDF Dokument.}]
+PdfDocument pdfDoc = new PdfDocument(writer);
+Document document = new Document(pdfDoc);
+pdfDoc.setDefaultPageSize(PageSize.A4.rotate());
+\end{lstlisting}
+	
+	\noindent Danach wird die mitgegebene Liste von Buchungen \textit{(bookingList)} iteriert (durchgegangen). Für jede Buchung wird überprüft, ob ein Seitenumbruch erforderlich ist, um unnötige, leere, Seiten zu vermeiden. Dabei gilt:
+	\begin{itemize}
+		\item Die erste Buchung wird direkt auf die erste Seite geschrieben.
+		\item Vor jeder weiteren Buchung wird ein Seitenumbruch eingefügt.
+		\item Nach der letzten Buchung wird keine zusätzliche Seite mehr hinzugefügt.
+	\end{itemize}
+	
+	\vspace{3mm}
+	\noindent Die eigentliche Gestaltung jeder Buchungsseite erfolgt durch folgende drei Methoden:
+	\begin{itemize}
+		\item \textbf{addHeader()}: Erstellt die Überschrift und fügt sie dem Dokument hinzu.
+		\item \textbf{addContentWithTables()}: Erstellt den Hauptinhalt der Buchung.
+		\item \textbf{addBottom()}: Fügt die Fußnote auf jeder Seite hinzu.
+	\end{itemize}
+	
+	\noindent Diese Aufteilung stellt sicher, dass der Code übersichtlich ist, modular bleibt und einzelne Abschnitte unabhängig voneinander geändert oder erweitert werden können. Durch den Einsatz von Methoden wird zudem eine übersichtliche Trennung der einzelnen Sektionen des PDFs erreicht.
+	
+	\vspace{3mm}
+	\noindent Abschließend wird das Dokument geschlossen und zurückgegeben, sodass es heruntergeladen werden kann.
+	
+	
+	
+	\newpage
+	\noindent \textbf{Methode: addHeader()}\vspace{3mm}\newline
+	\noindent Die Methode \texttt{addHeader()} hat die Aufgabe, die Überschrift einer Seite zu erzeugen. Der Titel, der dabei verwendet wird, setzt sich aus den folgenden Informationen zusammen: \textit{"Buchung: Vorname Nachname - BookingID"}. Um eine klare visuelle Hierarchie zu schaffen, wird dieser Titel in einer größeren und fetteren Schrift dargestellt als der restliche Text. Zudem wird die Überschrift in eine Zelle einer Tabelle eingefügt, um die Platzierung der Elemente auf der Seite zu erleichtern. Am Ende der Methode wird die formatierte Überschrift dem Dokument hinzugefügt.
+	
+	\vspace{3mm}
+	\noindent Der folgende Codeausschnitt zeigt, wie dies im Detail umgesetzt wird:
+	
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: Header erstellen.}]
+Cell titleCell = new Cell().add(titleParagraph);
+headerTable.addCell(titleCell);
+document.add(headerTable);
+\end{lstlisting}
+
+	\vspace{5mm}
+	\noindent \textbf{Methode: addContentWithTables()}\vspace{3mm}
+	
+	\noindent Auch diese Methode teilt sich in unterschiedliche Aufgabenbereiche auf:
+	
+	\begin{enumerate}
+		\item \textbf{table1} - Beinhaltet die allgemeinen Daten und das Bild
+		\item \textbf{outertable / innertable} - Formatiert die allgemeinen Daten
+		\item \textbf{tableDates} - Enthält die Datumsangaben der Buchung
+		\item \textbf{tableAddOns} - Stellt die zusätzlichen Reisegäste dar
+	\end{enumerate}
+	
+	\vspace{3mm} 
+	
+	\noindent Die Methode erstellt ein strukturiertes Dokument mit verschiedenen Tabellen, die die Buchungs- und Personendaten übersichtlich darstellen. Zunächst werden allgemeine Informationen über den Hauptreisenden, wie Name, Geburtsdatum und Reisedokument, formatiert und in einer Tabelle angeordnet. Anschließend folgen die Adressdaten sowie Details zum gebuchten Mietobjekt.  Ein Logo wird ebenfalls eingebunden, um das Dokument optisch abzurunden.  
+	
+	\vspace{3mm} 
+	
+	\noindent Daraufhin wird eine weitere Tabelle zur Darstellung der Buchungsdauer eingefügt, die Ankunfts- und Abreisedaten enthält. Schließlich listet die Methode in einer zusätzlichen Tabelle alle weiteren Reisenden auf, indem deren Namen und Geburtsdaten dargestellt werden. 
+	
+	
+	\noindent Der in Abbildung 8.33 dargestellte Code Abschnitt zeigt, wie eine solche Tabelle erstellt wird, und wie mit Verschachtelung von Tabellen gearbeitet wird. Die letzte Zeile zeigt außerdem wie die Tabelle dem Dokument angehängt wird.
+	
+	
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: Verschachtelung.}]
+Table innerTable = new Table(new float[] {2,1});
+innerTable.setWidth(UnitValue.createPercentValue(100));
+innerTable.addCell(creatCell("Vorname: Max"));
+outerTable.addCell(new Cell().add(innerTable));
+document.add(outerTable);
+\end{lstlisting}
+	
+	\newpage
+	\noindent \textbf{Methode: addBottom()}\vspace{3mm}\newline
+	\noindent Die Methode \texttt{addBottom()} erstellt eine Fußzeile am unteren Rand jeder Seite des PDF-Dokuments. Sie enthält wichtige Informationen zu den Buchungen sowie den Namen der \textit{Equilibria Immobilienmanagement GmbH}.
+	
+	\vspace{3mm}
+	\noindent Die Fußzeile wird in Form einer Tabelle mit drei Spalten realisiert:
+	\begin{itemize}
+		\item Die erste Spalte enthält eine Zusammenfassung der Buchungsdaten, einschließlich des frühesten Check-ins und des spätesten Check-outs.
+		\item Die zweite Spalte bleibt leer, um visuell eine Trennung zwischen den Informationen zu schaffen.
+		\item Die dritte Spalte enthält den Firmennamen „Equilibria Immobilienmanagement GmbH“ und wird rechtsbündig ausgerichtet.
+	\end{itemize}
+	
+	\noindent Die Tabelle wird an einer festen Position am unteren Seitenrand platziert. Das Platzieren sowie die breite wird mithilfe der \texttt{setFixedPosition()} Methode angegeben. 
+	
+	\vspace{3mm}
+	\noindent Der folgende Codeausschnitt zeigt, wie eine Fußzeile im Code umgesetzt werden könnte, mit verschiedensten Style-Attributen:
+    
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: PDF-Footer.}]
+Table unten = new Table(new float[]{1,2})
+unten.addCell(new Cell().setWidth(100).setBorder(Border.NO_BORDER));
+unten.addCell(createCell("test").setTextAlignment(TextAlignment.LEFT));
+unten.setFixedPosition(36, 15, 500);
+document.add(unten);
+\end{lstlisting}
+	
+	\noindent \textit{Dieser Code Ausschnitt ist nur ein Beispiel-Code, welcher der einfachen Darstellung dient und wurde so nicht im Projekt verwendet.}
+	
+	\newpage
+	\noindent \textbf{Exportiertes PDF}\vspace{3mm}\newline
+	Dieses exportierte PDF ist mit Test-Daten ausgefüllt und dient lediglich der Darstellung der Ausgabe der vorher beschriebenen Methoden: 
+	
+	\makefig{images/pdf.png}{height=11cm}{ PDF Export }{fig:caption-label}
+	
+	
+	\subsubsection{CSV}
+    CSV steht für \textbf{C}omma-\textbf{S}eparated \textbf{V}alues. Dabei handelt es sich um eine Textdatei, in der Werte zeilenweise aufgeführt und durch Kommas getrennt sind. Tabellenkalkulationsprogramme wie Excel interpretieren diese Trennung oft so, dass die Werte in separate Zellen eingetragen werden, um die Lesbarkeit zu erhöhen. Die Tabellenüberschrift wird zunächst als String erstellt, in der die Spaltennamen durch Komma  getrennt sind. Danach werden die übergebenen Buchungsdaten zeilenweise im selben Format gespeichert. Der Output-String ist in Abbildung 8.35 dargestellt und erscheint im Vergleich zur formatierten Darstellung in Abbildung 8.8 unstrukturiert.
+	
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: String Form eines CSV.}]
+ID,Accommodation,MainPerson,CheckIn,ActualCheckOut,PersonsCount
+123,Sea View Resort,John Doe,2025-01-20,2025-01-26,3
+\end{lstlisting}
+
+	\makefig{images/csv.png}{height=1cm}{ CSV Darstellung }{fig:caption-label}
+	
+	\noindent Um jede Buchung in eine eigene Zeile zu schreiben, wird am Ende jeder Buchung ein \textbf{\textbackslash n} angehängt, welches für einen Zeilenumbruch sorgt. Wurden alle Buchungen in den String eingefügt, wird er als Byte-Array im UTF-8-Format zurückgegeben, sodass er als Datei gespeichert werden kann.
+	
+	\subsubsection{Excel}
+	Die Methode \texttt{getExcel} wird verwendet, um Buchungsdaten in eine Excel-Datei im \textbf{XLSX}-Format zu exportieren. 
+	
+	\noindent Zu Beginn wird ein \textit{Workbook} erstellt. Für den Export im \textbf{XLSX}-Format wird die \textit{XSSFWorkbook}-Klasse aus der \textbf{Apache POI}-Bibliothek verwendet, - "the Java API for Microsoft Documents". In dem Workbook wird ein Sheet mit dem Namen \textit{Buchung} erstellt, zu dem die Kopfreihe mit den benötigten Zellen erstellt wird.
+	
+	\noindent Anschließend wird wieder die übergebene \textit{BookingListe} durchgegangen und jede Buchung in eine Zeile gespeichert. Hierfür wird eine Zeile wie in Abbildung 8.36 erstellt und anschließend die Variable \textit{rowNum} erhöht, damit die nächste Buchung anschließend in eine neue Zeile geschrieben wird.
+	
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: Reihe erstellen.}]
+Row row = sheet.createRow(rowNum++);
+\end{lstlisting}
+    
+	\noindent Danach werden alle Attribute des Buchungsobjekts so wie in Abbildung 8.37 dargestellt in die Zeile gespeichert. In welche Zelle dabei welches Attribut kommt, kann mit dem Index der \textit{createCell()} Methode angegeben werden. 
+
+\begin{lstlisting}[language=Java, caption={Code-Ausschnitt: Zelle befüllen.}]
+row.createCell(0).setCellValue(booking.getId());
+\end{lstlisting}
+
+	\noindent Abschließend wird der Output wieder in ein ByteArray gespeichert, um die Datei herunterladen zu können.
+	
+	
+	
+	
+	
+	\newpage
+	\subsection{Deployment}
+	\label{sec:deployment}
+	\subsubsection{Erstellung eines Images mittels Docker}
+	Um das Projekt schnell und einfach aufsetzen zu können, wurde entschieden, Docker zu verwenden. Docker ist eine \textbf{Containerisierungsplattform}, die es ermöglicht, Anwendungen mit ihren Abhängigkeiten in isolierten Containern auszuführen. Dadurch ist es irrelevant, auf welchem Betriebssystem gearbeitet wird.
+	
+	\vspace{3mm} \noindent
+	Um ein sogenanntes Image auf den Docker Hub hochzuladen, muss man wie folgt vorgehen. Dabei ist es wichtig, einen Docker Hub Account zu besitzen und sich damit angemeldet zu haben.
+	
+	\begin{enumerate}
+		\item Das gewünschte Projekt mittels \textit{mvn clean package} bauen, um eine ausführbare JAR-Datei zu erzeugen.
+		\item Ein \texttt{Dockerfile} im Projektverzeichnis erstellen, das die Laufzeitumgebung definiert.
+		\item In das Projekt-Verzeichnis wechseln
+		\item Ein Docker-Image mit \textit{docker build -t bast1sa1ler/equilibria-sharing-backend:latest .} erstellen.
+		\item Das Image mit \textit{docker push bast1sa1ler/equilibria-sharing-backend:latest} auf den Docker Hub hochladen.
+	\end{enumerate}
+	
+	\noindent Mit diesen fünf Schritten kann das Projekt mithilfe eines passenden Dockerfiles auf Docker Hub veröffentlicht und zugänglich gemacht werden. Falls bereits kritische Daten vorhanden sind, sollten diese nicht veröffentlicht werden. Dies lässt sich durch eine `.dockerignore`-Datei verhindern, in der festgelegt wird, welche Dateien und Verzeichnisse nicht veröffentlicht werden sollen. 
+	
+	\subsubsection{Dockerfile}
+	
+	\begin{lstlisting}[language=Java, caption={Beispiel Dockerfile \cite{ChatGPT:docker}.}]
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/equilibria-sharing-0.0.1-SNAPSHOT.jar /app/backend.jar
+EXPOSE 8080
+CMD ["java", "-jar", "/app/backend.jar"]
+	\end{lstlisting}
+	
+	\noindent Das in Abbildung 8.38 gezeigte Dockerfile besteht aus fünf Zeilen. Die erste Zeile legt das Basis-Image fest. In diesem Fall eine Java-Laufzeitumgebung. Anschließend wird das Arbeitsverzeichnis im Container auf \texttt{/app} gesetzt, sodass alle nachfolgenden Befehle relativ zu diesem Verzeichnis ausgeführt werden.  
+	
+	\noindent Die dritte Zeile kopiert die erstellte JAR-Datei, welche im vorherigen Unterkapitel in Schritt 1 erstellt wurde, aus dem \texttt{target}-Ordner des Projekts in das \texttt{/app}-Verzeichnis des Containers und benennt sie in \texttt{backend.jar} um. Danach wird festgelegt, dass der Container den Port \texttt{8080} nutzt.
+	
+	\noindent Schließlich gibt die letzte Zeile den Befehl an, der beim Starten des Containers ausgeführt wird. In diesem Fall wird die JAR-Datei mit \texttt{java -jar} gestartet, um die Anwendung auszuführen.
+	
+	\newpage
+	\subsubsection{Docker Compose}
+	
+	Docker Compose ist ein Tool, das es ermöglicht, mehrere Container-Anwendungen zu definieren und gemeinsam zu verwalten. Statt Container einzeln über die Kommandozeile zu starten, kann eine Datei verwendet werden, um alle benötigten Dienste, Netzwerke und Umgebungsvariablen in einer einzigen Datei zu deklarieren.
+	
+	\subsubsection{Erläuterung der Docker Compose Datei}
+	
+	Die Compose File ist in \textbf{4} verschiedene Sektionen eingeteilt. 
+	\hyperref[sec:datenbank]{Datenbank}, \hyperref[sec:backend]{Backend}, \hyperref[sec:frontend]{Frontend} und die \hyperref[sec:netzwerk]{Netzwerk Konfiguration}. Sie dienen der Übersicht.
+	
+	\subsubsection{MariaDB-Service}
+	\label{sec:datenbank}
+	Der \texttt{mariadb}-Service basiert auf dem offiziellen MariaDB-Image:
+	
+	\begin{lstlisting}[language=Java]
+image: 'mariadb:latest'
+	\end{lstlisting}
+	
+	\noindent Es werden mehrere Umgebungsvariablen gesetzt, um die Datenbank zu konfigurieren:
+	
+	\begin{itemize}
+		\item \texttt{MARIADB\_DATABASE=mydatabase} definiert den Namen der Datenbank.
+		\item \texttt{MARIADB\_USER=myuser} gibt den Benutzernamen für die Verbindung an.
+		\item \texttt{MARIADB\_PASSWORD=secret} und \texttt{MARIADB\_ROOT\_PASSWORD=verysecret} legen die Zugangsdaten fest. Diese sollten vor der Inbetriebnahme des Projekts geändert werden.
+	\end{itemize}
+	
+	\noindent Der Standart-Port für MariaDB 3306 wird freigegeben und zusätzlich wird ein \texttt{healthcheck} durchgeführt, um zu überprüfen, ob die Datenbank erreichbar ist.
+	
+	\subsubsection{Backend-Service}
+	\label{sec:backend}
+	Das Backend basiert auf dem zuvor erstellten Docker-Image:
+	
+	\begin{lstlisting}[language=Java]
+image: bast1sa1ler/equilibria-sharing_backend:latest
+	\end{lstlisting}
+	
+	\noindent Es wird mit der Datenbank über Umgebungsvariablen konfiguriert:
+	
+	\begin{itemize}
+		\item \texttt{DB\_HOST=mariadb} verweist auf den MariaDB-Container.
+	\end{itemize}
+	
+	\noindent Weiteres werden die Daten übergeben, die benötigt werden um sich in der Datenbank anzumelden.
+	
+	\noindent Der Backend-Service hängt von der Datenbank ab:
+	
+	\begin{lstlisting}[language=Java]
+depends_on:
+	- mariadb
+	\end{lstlisting}
+	
+	\noindent Dadurch wird sichergestellt, dass MariaDB vor dem Start des Backends hochgefahren wird. Zudem wird \texttt{restart: always} gesetzt, um den Container automatisch neu zu starten, falls ein Fehler auftritt.
+	
+	\subsubsection{Frontend-Service}
+	\label{sec:frontend}
+	Das Frontend verwendet das Image, welches im vorhinein auf den Docker-Hub gepusht wurde:
+	
+	\begin{lstlisting}[language=Java]
+image: bast1sa1ler/equilibria-sharing_frontend:latest
+	\end{lstlisting}
+	
+	\noindent Der Webserver ist über Port 3000 erreichbar:
+	
+	\begin{lstlisting}[language=Java]
+ports:
+	- '3000:3000'
+	\end{lstlisting}
+	
+	\subsubsection{Netzwerk-Konfiguration}
+	\label{sec:netzwerk}
+	Alle drei Dienste sind über ein gemeinsames Netzwerk verbunden:
+	
+	\begin{lstlisting}
+networks:
+	mynetwork:
+    	driver: bridge
+	\end{lstlisting}
+	
+	Dadurch können die Container untereinander über ihre Servicenamen kommunizieren.
+	
+	\subsubsection{Fazit}
+	Die Docker-Compose-Datei übernimmt die Koordination der drei Container, um eine reibungslose Kommunikation zu gewährleisten. Alle notwendigen Konfigurationen sind in einer einzigen Datei hinterlegt, die mit nur einem einzigen Befehl ausgeführt werden kann:
+	
+	\begin{lstlisting}[language=Java]
+docker-compose up -d
+	\end{lstlisting}
+	
+	\noindent Dies vereinfacht die Bereitstellung und Verwaltung der Anwendung erheblich. Möchte man den Code ändern, muss das veränderte Image erneut veröffentlicht und die Docker-Compose-Datei erneut ausgeführt werden.
+	
+	\newpage
+	\subsection{Zusammenfassung \& Reflexion}
+	Während der Implementierung traten verschiedene Herausforderungen auf, insbesondere in den 
+	Bereichen der gestaltung des PDFs mittels iText, aber auch kleine Probleme bei dem Docker-Deployment.
+	
+	\vspace{3mm}
+	\noindent Die, wie erwartet, größte Herausforderung stellte die Generierung und Strukturierung eines PDFs mit iText da. 
+	Die präzise Anordnung der Inhalte von Tabellen und Bildern, 
+	erforderten eine detaillierte Anpassung der Layout-Parameter und ein durchdachtes System der Verschachtelung. Da sich Objekte von Zeit zu Zeit nicht so verhielten wie gedacht, nahm dieser Teil des Projektes viel Zeit in Anspruch. 
+	
+	\vspace{3mm}
+	\noindent Im Großen und Ganzen gab es jedoch keine großen Komplikationen, welche dem Projektfortschritt im Wege standen.
+	

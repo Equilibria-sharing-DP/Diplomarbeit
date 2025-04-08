@@ -1,0 +1,131 @@
+\section{Entwicklung der Datenbank}
+
+\subsection{Einleitung}
+
+Das Ziel dieses Projektes ist die Konzeptionierung und Verwaltung einer Datenbank, sowie die Automatisierung von Abläufen, um periodisch Buchungsprotokolle zu erstellen, und den Mitarbeitern der beauftragenden Firma zur Verfügung zu stellen.
+\newline
+Um diese Ziele zu erreichen, benötigt die Anwendung eine effiziente und \gls{Persistenz} Art, um Daten zu speichern.
+\newline
+Daraus lässt sich folgende zentrale Forschungsfrage ableiten:\vspace{5mm}\newline
+\indent \textbf{Wie können Buchungsdaten so gespeichert und zugänglich gemacht werden, dass der \indent Zugriff sowohl benutzerfreundlich als auch effizient ist?}
+
+\vspace{3mm}\noindent Um diese Frage effektiv beantworten zu können, ist es nötig, die aktuell bewährten Methoden für Datenspeicherung zu analysieren. Diese Untersuchung wird sich aufgrund der Vielzahl an Ansätzen auf die für die Applikation wichtigsten Methoden konzentrieren.
+
+
+\subsection{Datenbanksysteme}
+Ein Datenbanksystem besteht aus einem Datenbankmanagementsystem (DBMS) und einer oder mehreren Datenbanken. Ein DBMS umfasst die Softwaremodule, die für die Verwaltung der Datenbank zuständig sind, während die Datenbank selbst lediglich den strukturierten Datenbestand darstellt.
+
+ \vspace{3mm}\noindent \textit{"Die klassischen Einsatzgebiete der Datenbanken sind Anwendungen im kommerziellen Bereich, die sich aus Buchhaltungs- und Katalogisierungsproblemen entwickelt haben"}-\cite{Buch:GunterSaake} S.10 Einsatzgebiete und Grenzen 
+ 
+
+ \vspace{3mm}\noindent Dies sind jedoch nicht die einzigen Einsatzmöglichkeiten von Datenbanksystemen. Grundsätzlich werden Datenbanken überall dort eingesetzt, wo Daten gespeichert und organisiert werden müssen.
+ 
+ \vspace{3mm}\noindent Hierbei wird zwischen zwei Kategorien unterschieden:
+ 
+ \begin{itemize}
+    \item \textit{RDBMS} - relationale Datenbankmanagementsysteme
+    \item \textit{NoSQL} - Not Only \gls{SQL} 
+ \end{itemize}
+ 
+\vspace{3mm}\noindent Bevor mit der Implementierung eines spezifischen DBMS begonnen wird, ist es essenziell, diese Kategorien eingehend zu verstehen.
+\cite{Buch:GunterSaake} \textit{Datenbanken, Konzepte und Sprachen S.10}
+
+\newpage
+\subsection{Relationales DBMS}
+Laut \textit{\cite{Buch:EdwinSchicker} S.57, Relationale Datenbanken} bestehen Relationale Datenbankmanagementsysteme ausschließlich aus Tabellen, über die auf Daten zugegriffen wird. Der Aufbau einer solchen Datenbank kann durch das Hinzufügen von Zeilen und Spalten flexibel angepasst werden. Die Verknüpfungen zwischen den Tabellen werden über Beziehungen hergestellt, die ebenfalls in den Tabellen gespeichert sind. \newline 
+
+\vspace{3mm}\makefig{images/erDiagramm.png}{height=5cm}{Ein einfaches Objekt-Diagramm, wobei 1 Schüler, n viele Bücher ausborgen kann}{fig:caption-label}
+
+\noindent Das Diagramm in Abbildung 4.4 zeigt eine Beispielbeziehung zwischen Studenten und Büchern in einem Bibliothekssystem. Ein Student, beschrieben durch \textbf{Ausweisnummer}, \textbf{Vorname} und \textbf{Nachname}, kann mehrere Bücher ausleihen, während jedes Buch, gekennzeichnet durch \textbf{Name} und \textbf{Artikelnummer}, einem Leihvorgang zugeordnet ist. Die \textbf{1:n-Beziehung} „\textbf{leiht aus}“ verdeutlicht den Prozess der Buchausleihe durch Studenten.
+
+
+\subsubsection{ACID}
+
+\vspace{3mm}\noindent Darüber hinaus erfüllen relationale Datenbankmanagementsysteme meistens die vier Eigenschaften des ACID-Prinzips, siehe \textit{\cite{Buch:GunterSaake} S.374}.
+
+\begin{itemize}
+    \item \textbf{Atomicity}: Eine Transaktion wird entweder vollständig oder gar nicht ausgeführt. Wenn eine Transaktion fehlschlägt, werden alle vorherigen Änderungen rückgängig gemacht.
+    \item \textbf{Consistency}: Eine Transaktion bringt das System von einem gültigen Zustand in einen anderen gültigen Zustand, unter Wahrung aller definierten Integritätsbedingungen.
+    \item \textbf{Isolation}: Transaktionen werden so ausgeführt, als ob sie alleine ablaufen, d.h. parallele Transaktionen beeinflussen sich nicht gegenseitig.
+    \item \textbf{Durability}: Nach dem Abschluss einer Transaktion sind die Änderungen permanent, auch im Falle eines Systemabsturzes.
+\end{itemize}
+Wie \cite{Paper:performanceComparison} beschreibt, weisen auch Relationale Datenbanken Nachteile auf, wie etwa erhöhte Laufzeiten und hohe Ein-/Ausgabeanforderungen bei Zugriffen über mehrere Tabellen. Zudem erfordert die Speicherung bestimmter Daten eine gewisse \gls{Redundanz}. Ebenso sind sie bei einer großen Anzahl an Daten langsamer bei \gls{CRUD} Operationen. 
+
+
+\subsubsection{BASE}
+
+\noindent Das BASE-Modell wird oft als Alternative zu ACID in verteilten Datenbanksystemen verwendet und stellt eine weniger strikte Konsistenz sicher, um bessere Verfügbarkeit und Partitionstoleranz zu erreichen. NoSQL DBMS verwenden in der Regel dieses Konzept. BASE steht hierbei für:
+
+\begin{itemize}
+    \item \textbf{Basically Available}: Das System garantiert Verfügbarkeit, auch wenn nicht immer auf die neuesten Daten zugegriffen werden kann.
+    \item \textbf{Soft State}: Der Zustand des Systems kann sich über die Zeit ohne externe Eingriffe ändern, da es zu Verzögerungen bei der Konsistenz kommen kann.
+    \item \textbf{Eventual Consistency}: Das System wird über die Zeit schließlich konsistent, aber es kann Phasen geben, in denen nicht alle Knoten die gleichen Daten haben.
+\end{itemize}
+
+\subsubsection{CAP}
+
+\noindent Das CAP-Theorem besagt jedoch, dass ein verteiltes Datenbanksystem maximal zwei der folgenden drei Eigenschaften gleichzeitig erfüllen kann:
+
+\begin{itemize}
+    \item \textbf{Consistency (Konsistenz)}: Alle Knoten eines verteilten Systems sehen die gleichen Daten zur gleichen Zeit.
+    \item \textbf{Availability (Verfügbarkeit)}: Jedes Anfrage erhält immer eine Antwort (entweder den aktuellen Zustand der Daten oder einen Fehler).
+    \item \textbf{Partition Tolerance (Partitionstoleranz)}: Das System funktioniert auch dann weiter, wenn Teile des Netzwerks ausfallen oder nicht kommunizieren können. Die einzelnen Partitionen sind dann ein eigenes System, bis sie wieder synchronisiert werden.
+\end{itemize}
+
+\noindent Das CAP-Theorem zwingt Datenbankarchitekten, eine Abwägung zwischen diesen Eigenschaften zu treffen. In Abbildung 4.5 wird gezeigt, welche Möglichkeiten es dabei gibt.
+
+\makefig{images/CapTheorem.png}{height=5cm}{Die 3 Möglichkeiten bei CAP \cite{Buch:AndreasMaier} S.149 }{fig:caption-label}
+
+\vspace{3mm}\noindent Die Quelle \cite{Buch:AndreasMaier} \textit{S. 148} beschreibt, dass im Gegensatz zu ACID, BASE eine zeitliche  Synchronisierung ermöglicht. Das ist besonders bei verteilten und webbasierten Systemen vorteilhaft.\newline
+
+
+\newpage
+\subsubsection{NoSQL DBMS}
+\enquote{Not only SQL} (früher No SQL) verwenden kein relationales Modell, sondern ein flexibles Schemamodell, das unterschiedliche unstrukturierte Datentypen wie Dokumente, Schlüssel-Wert-Paare, breite Spalten und Graphen unterstützt. Die Vorteile solcher DBMS sind Flexibilität, hohe Leistung, horizontale Skalierbarkeit und eine einfache Entwicklung. 
+
+\vspace{3mm}\noindent Es gibt fünf Haupttypen, zwischen denen unterschieden wird:
+\vspace{3mm}\begin{itemize}
+    \item \textbf{Dokumentendatenbanken:} Die Daten werden in einem JSON-ähnlichen Format gespeichert, das den Datenstrukturen entspricht, die Entwickler in ihrem Anwendungscode verwenden. Dokumentdatenbanken werden häufig für Blogging-Plattformen, E-Commerce, Echtzeitanalysen und Content-Management-Systeme verwendet.
+    
+    \item \textbf{Datenbanken mit Schlüssel/Wert-Paaren:} Jeder Schlüssel ist mit einem Wert wie einem String, einer Zahl oder einem komplexen Objekt verknüpft. Diese Struktur wird häufig für Nutzereinstellungen, Einkaufswagen und Profile in Webanwendungen verwendet, wobei der Schlüssel zum Speichern oder Abrufen des zugehörigen Werts dient, ohne dabei die ganze Datenbank durchgehen zu müssen.
+    
+    \item \textbf{Spaltenorientierte Datenbanken} speichern Daten in Spalten anstelle von Zeilen und ermöglichen so eine flexiblere Speicherung innerhalb einer Tabelle. Diese Struktur eignet sich besonders für Analyseanwendungen, bei denen einzelne Spalten schnell abgefragt und aggregiert werden müssen. Sie werden häufig für Kataloge, Betrugserkennung und Empfehlungssysteme verwendet, da sie eine schnelle Datenabfrage ermöglichen.
+    
+    \item \textbf{Graphdatenbanken} organisieren Daten als Knoten in einem Diagramm und betonen die Beziehungen zwischen diesen Knoten. Verbindungen (Kanten) werden als zentrale Elemente gespeichert, was eine einfachere Navigation und eine tiefere Darstellung der Beziehungen ermöglicht. Sie sind besonders nützlich in Systemen, die komplexe Beziehungen abbilden, wie Social Media und Reservierungssysteme.
+    
+    \item \textbf{In-Memory-Datenbanken} speichern Daten im Arbeitsspeicher, wodurch sie niedrige Latenzzeiten für Echtzeitanwendungen bieten. Diese Datenbanken werden vor allem für Caching, Messaging, Streaming und Echtzeitanalysen eingesetzt. Sie ermöglichen schnelle Datenzugriffe und werden oft in Szenarien genutzt, in denen Geschwindigkeit und geringe Verzögerung entscheidend sind.
+    
+\end{itemize}
+\cite{Google:NoSQL} \textit{Google Dokumentation zu NoSQL} \newline
+\cite{Buch:AndreasMaier} \textit{SQL- \& NoSQL-Datenbanken S.18}
+\newpage
+\subsection{Geschichte von Datenbanken}
+
+Nachdem wir nun die Grundlagen eines Datenbanksystems kennen, widmen wir uns seiner Entstehung. Laut der Definition von Oxford Languages ist eine Datenbank ein 
+\textit{\enquote{System zur Beschreibung, Speicherung und zum Abrufen von großen Datenmengen}} \cite{Definition:Datenbank}
+
+\noindent Datenbanken existieren jedoch nicht erst seit der Einführung des Computers. Bereits lange zuvor gab es sie schon etwa in Form von Bibliotheken, Geschäfts- und Krankenakten oder Ähnlichem. Einige der damals entwickelten Konzepte werden bis heut angewandt.
+
+\vspace{3mm}\noindent \textit{Es folgt eine Zusammenfassung aus verschiedenste Paper, die ihre Quellen am Ende des Absatzes angegeben hat.}
+
+\vspace{3mm}\noindent \textbf{1960er Jahre -}
+Als es in den 1960er Jahren Computer immer verbreiteter wurden, begann auch der Einsatz von Datenbanken zur Speicherung großer Datenmengen. Die Einführung von Direktzugriffsspeichern (wie Festplatten) ermöglichte den Übergang von batch-Systemen, zu interaktiven Systemen. Es wurden zwei Modelle entwickelt, das hierarchische Modell (Information Management System, IMS von IBM) und das Netzwerkmodell (CODASYL). Anwendungen griffen über Zeiger auf die Daten zu, was komplexe Navigationsstrukturen erforderte, aber Flexibilität beim Zugriff bot. Ein bedeutendes System dieser Zeit war SABRE, entwickelt von IBM für American Airlines zur Verwaltung von Flugreservierungen.  \cite{Paper:Geschichte3} \cite{Paper:Geschichte4} \cite{Paper:Geschichte1}
+
+\vspace{3mm}\noindent \textbf{1970er Jahre -}
+ 1970 veröffentlichte E.F. Codd das relationale Datenbankmodell, das einen \newline\gls{Paradigmenwechsel} verursachte. Das Modell schlug die Suche nach Daten über Inhalt anstatt über Zeiger vor. Codds Modell, basierend auf relationaler Algebra, ermöglichte eine klarere Datenstruktur und inspirierte die Entwicklung von \gls{System R} bei IBM. Relationale Datenbanken setzten sich zunehmend durch, und IBM entwickelte \gls{SQL}  als eine benutzerfreundliche Sprache, um diese Modelle zu verwalten.
+\cite{Paper:Geschichte1}\cite{Paper:Geschichte2}
+
+\vspace{3mm}\noindent \textbf{1980er Jahre -}
+Relationale Datenbanken gewannen zunehmend an Popularität, und SQL wurde zum Standard für die Abfrage und Verwaltung relationaler Daten. Die Markteinführung kommerzieller Systeme wie IBM DB2 und Oracle trug dazu bei, relationale Datenbanken zum Standard in der Datenverarbeitung zu machen. 
+\cite{Paper:Geschichte1}\cite{Paper:Geschichte4}
+
+\vspace{3mm}\noindent \textbf{1990er Jahre -}
+  Um den Anforderungen an größere, komplexere Daten und die Integration mit Netzwerken gerecht zu werden, entwickelten sich Datenbanktechnologien weiter. Objektorientierte Datenbanksysteme wurden eingeführt. Die zunehmende Nutzung des Internets führte zu Anforderungen an leistungsfähige und webfähige Datenbanken.
+  \cite{Paper:Geschichte4}
+
+\vspace{3mm}\noindent \textbf{2000er Jahre bis heute -}
+Mit der zunehmenden Bedeutung des Internets wurden skalierbare und verteilte Datenbanken wie NoSQL populär, um große und einheitliche Datenmengen zu verarbeiten. SQL-basierte relationale Datenbanken bleiben jedoch weiterhin ein wesentlicher Standard in der Geschäftswelt. \cite{Paper:Geschichte4}
+ 
+
+\subsection{Ergebnis der Literaturrecherche}
+Die Recherche zeigt, dass ein relationales Datenbanksystem die beste Wahl für die Datenspeicherung in diesem Projekt ist. Die Analyse verdeutlicht, dass eine relationale Datenbank in Bezug auf Effizienz, Skalierbarkeit und Benutzerfreundlichkeit, bei den benötigen Daten, besonders geeignet ist. Zudem bieten relationale Datenbanken eine große Auswahl an Datenbankmanagementsystemen, was die Auswahl eines passenden Systems erleichtert.

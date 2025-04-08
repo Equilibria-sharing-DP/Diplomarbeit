@@ -1,0 +1,148 @@
+\section{Technische Machbarkeit des Backends}
+\subsection{Kriterien}
+Die Wahl der Kriterien für die Bewertung der Backend-Technologien basiert auf den spezifischen Anforderungen des Projekts. Jedes Kriterium spiegelt eine entscheidende Eigenschaft wider, die den Erfolg der Umsetzung maßgeblich beeinflusst. Die Gewichtung erfolgte in enger Abstimmung mit den Projektzielen und Anforderungen.
+\begin{enumerate}
+	\item Einfache Implementierung (15 \%): Wie einfach ist die Technologie aufzusetzen und zu implementieren?
+	\item Aktuelle Sprachkenntnisse (20 \%): Welche Programmiersprache dominiert die Technologie? Wird diese bereits vom Projektteam beherrscht?
+	\item Skalierbarkeit (10 \%): Wie einfach sind bereits vorhandene Applikationen mit der Technologie im Nachhinein zu skalieren?
+	\item Sicherheit (10 \%): Welche Sicherheitsfunktionen stellen diese Technologien bereit? Sind diese bereits automatisch vorhanden, oder müssen sie manuell implementiert werden?
+	\item Performance (10 \%): Wie schnell ist die Applikation in der Lage, Anfragen zu verarbeiten? Wie geht diese mit einer größeren Skalierung umher?
+	\item Community und Support (10 \%): Wie aktiv ist die Community? Bietet der Hersteller von sich aus einen Support an, oder muss man sich dafür an Dritte wenden?
+	\item Dokumentation (10 \%): Ist eine Herstellereigene Dokumentation vorhanden? Wie umfangreich und gepflegt ist diese?
+	\item Integration mit Frontend \& Datenbank (10 \%): Wie gut ist die Technologie mit den gängigsten Frontend-/Datenbankframeworks kompatibel?
+    \item Verfügbarkeit von Libraries (5 \%): Wie viele Drittanbieter-Bibliotheken stehen zur Verfügung? Welchen Funktionsumfang bieten sie an?
+\end{enumerate}
+
+Die Gewichtung der Kriterien spiegelt die spezifischen Anforderungen des Projekts wider. Die höchste Priorität wurde auf die Sprachkenntnisse und Implementierung gelegt, um die Effizienz der Entwicklung im schulischen Rahmen zu gewährleisten. Skalierbarkeit und Sicherheit wurden hoch gewichtet, da diese Aspekte entscheidend für die langfristige Nutzbarkeit des Systems sind. Performance, Community und Support, Dokumentation sowie eine einfache Integration mit verschiedenen Frontend- und Datenbanksystemen werden als unterstützende, aber nicht zentrale Faktoren betrachtet.
+
+Um die Analyse der jeweiligen Technologien authentischer zu machen, wurden für den praktischen Teil die folgenden Vorstudienszenarien aufgestellt:
+
+\begin{itemize}
+	\item Das Aufsetzen eines Projektes mit der jeweiligen Technologie
+	\item Das Erstellen einer simplen REST-Schnittstelle mit der jeweiligen Technologie
+\end{itemize}
+
+\subsection{Ergebnisse}
+
+\subsubsection{Django}
+
+Beim Aufsetzen eines Projekts mit Django wurde festgestellt, dass der Initialisierungsprozess durch das Kommandozeilenwerkzeug \texttt{django-admin} (welches in \cite{website-django-admin} dokumentiert wurde) stark vereinfacht wird. Durch Ausführen des Befehls \texttt{django-admin startproject} wurde eine grundlegende Projektstruktur automatisch generiert. Diese vordefinierte Struktur umfasste wichtige Verzeichnisse und Konfigurationsdateien, wodurch die Einrichtungsphase beschleunigt wurde. Diese automatische Einstellung ermöglicht einen schnellen Einstieg in die Entwicklung.
+
+Für die Erstellung einer REST-Schnittstelle wurde das Django REST Framework verwendet. Dabei wurde eine API-Endpunktstruktur implementiert, \gls{CRUD} Operationen für einen einfachen Datensatz ermöglichte. Es zeigte sich, dass durch die Nutzung des Django REST Frameworks viele notwendige Funktionen wie Serialisierung und Validierung bereits als vordefinierte Module verfügbar sind, jedoch viel Vorkenntnisse benötigen, um effizient genutzt werden zu können. Dies erhöhte den Implementierungsaufwand. Der API-Endpunkt konnte erfolgreich getestet werden, wobei eine JSON-Ausgabe über die integrierte Entwicklungsumgebung von Django bereitgestellt wurde.
+
+\subsubsection{Flask}
+
+Beim Aufsetzen eines Projekts mit Flask wurde ein minimalistischer Ansatz festgestellt, da kein automatisches Generieren einer Projektstruktur angeboten wird. Stattdessen mussten die erforderlichen Verzeichnisse und Dateien manuell erstellt werden. Als Einstiegspunkt wurde ein grundlegendes Python-Skript eingerichtet, das als Hauptdatei der Anwendung diente. Diese manuelle Vorgehensweise bietet zwar mehr Kontrolle über die Projektstruktur, führt jedoch auch zu einem erhöhten Konfigurationsaufwand.
+
+Für die Erstellung einer REST-Schnittstelle kam die Bibliothek \texttt{flask} zum Einsatz. Ein einfacher API-Endpunkt wurde definiert, der sowohl HTTP-GET- als auch POST-Anfragen verarbeiten konnte. Die Implementierung erfolgte durch das Hinzufügen einer Route innerhalb der Python-Datei, die eine JSON-Antwort zurückgab. Dabei wurde festgestellt, dass die REST-Schnittstelle mit minimalem Code und ohne zusätzliche Abhängigkeiten umgesetzt werden konnte. Die Flexibilität von Flask erlaubte es, die API-Logik schnell und unkompliziert anzupassen. Allerdings wurde festgestellt, dass Sicherheitsfunktionen und Validierungen manuell implementiert werden müssen, was zusätzlichen Entwicklungsaufwand erfordert.
+
+
+\subsubsection{ExpressJS}
+
+Beim Aufsetzen eines Projekts mit ExpressJS wurde das Kommandozeilenwerkzeug \texttt{npm}, welches unter \cite{website-npm} genauer dokumentiert wurde, verwendet, um ein neues Projekt zu initialisieren. Der Befehl \texttt{express-generator} (siehe \cite{website-expressjs-generator}) generierte dabei automatisch eine grundlegende Projektstruktur. Diese Struktur umfasste vordefinierte Verzeichnisse für Routen, Ansichten und öffentliche Dateien, wodurch der Entwicklungsprozess erheblich vereinfacht wurde. Nach der Installation der erforderlichen Abhängigkeiten konnte das Projekt lokal gestartet und weiterentwickelt werden.
+
+Für die Implementierung einer REST-Schnittstelle wurde eine einfache Route definiert, die HTTP-Anfragen verarbeiten und JSON-Daten zurückgeben konnte. Der ExpressJS-Server konnte dabei mit nur wenigen Zeilen Code konfiguriert werden. Um die Verarbeitung von Anfrageinhalten zu erleichtern, wurden externe Bibliotheken wie die Middleware \texttt{body-parser} (siehe \cite{website-expressjs-body-parser-lib}) integriert. Die entwickelte REST-Schnittstelle wurde erfolgreich getestet, indem sowohl GET- als auch POST-Anfragen an den API-Endpunkt gesendet wurden. Während der Tests zeigte sich, dass ExpressJS durch seine asynchrone Architektur besonders gut für die Verarbeitung paralleler Anfragen geeignet ist, sofern die entsprechende Funktionalität im Quellcode korrekt implementiert wird. Die Programmierung sowie das damit verbundene Debugging können bei dieser Technologie etwas aufwendiger sein, da JavaScript eine sehr spezielle Programmiersprache ist.
+
+
+\subsubsection{Spring Boot}
+
+Das Projekt wurde unter Verwendung des Tools \textit{Spring Initializr}, der auf \cite{website-spring-initializr} gefunden werden kann, aufgesetzt. Dieses bietet eine benutzerfreundliche Weboberfläche zur automatisierten Generierung einer projektbasierten Verzeichnisstruktur. Nach der Auswahl relevanter Abhängigkeiten und Funktionalitäten konnten die erstellten Dateien als ZIP-Archiv heruntergeladen werden. Durch diesen automatisierten Setup-Prozess wurde der Einstieg in die Entwicklung deutlich beschleunigt. Nach dem Entpacken der Dateien wurde das Projekt in einer geeigneten Entwicklungsumgebung, wie beispielsweise IntelliJ IDEA, geöffnet und weiterentwickelt.
+
+Im Rahmen der Implementierung der REST-Schnittstelle wurde eine einfache Controller-Klasse erstellt, die einen API-Endpunkt bereitstellt. Dieser Endpunkt war in der Lage, HTTP-Anfragen entgegenzunehmen und JSON-Antworten zu liefern. Dabei zeigte sich, dass Spring Boot umfangreiche Funktionalitäten wie Validierung, Serialisierung und Fehlerbehandlung bereits integriert hat, wodurch sich der Entwicklungsaufwand signifikant reduzierte. Die entwickelte REST-Schnittstelle wurde mittels GET- und POST-Anfragen erfolgreich getestet. Es konnte eine hohe Stabilität und Performance von Spring Boot beobachtet werden, insbesondere bei der Verarbeitung paralleler Anfragen.
+
+
+\subsection{Bewertung und Auswahl}
+
+Die einzelnen Technologien wurden im letzten Schritt isoliert voneinander begutachtet, nun folgt der direkte Vergleich.
+
+\subsubsection{Django}
+
+Django bietet eine solide Projektstruktur, die durch den Befehl \texttt{django-admin startproject}, siehe \cite{website-django-admin}, automatisch generiert wird. Die einfache Implementierung wird jedoch durch die Notwendigkeit umfangreicher Vorkenntnisse relativiert. Das Django REST Framework reduziert den Implementierungsaufwand durch integrierte Serialisierungs- und Validierungsfunktionen. Django zeigte Stärken in der Community-Unterstützung und Performance, jedoch erhöhten die hohen Anforderungen an die Konfiguration den Aufwand in der Praxis.
+
+\subsubsection{Flask}
+
+Flask verfolgt einen minimalistischen Ansatz und ermöglicht eine flexible Anpassung der Projektstruktur. Diese Flexibilität führte zu einer höheren Punktzahl bei der einfachen Implementierung, da weniger Vorgaben zu beachten sind. Jedoch müssen Sicherheitsfunktionen und Validierungen manuell implementiert werden, was zusätzlichen Aufwand erfordert. Flask punktete vor allem durch seine Performance und einfache Anpassbarkeit der API-Logik, fiel jedoch bei der Community-Unterstützung etwas ab.
+
+\subsubsection{ExpressJS}
+
+ExpressJS bietet durch den \texttt{express-generator}, welcher unter \cite{website-expressjs-generator} zu finden ist, eine einfache Möglichkeit, eine Projektstruktur schnell aufzusetzen. Die Technologie zeigte gute Ergebnisse bei der Skalierbarkeit und der einfachen Implementierung, jedoch sind Programmierung und Debugging aufgrund der Besonderheiten von JavaScript teilweise aufwendiger. ExpressJS punktete besonders in der Performance und bei parallelen Anfragen, während es in der Community-Unterstützung und Dokumentation solide Ergebnisse lieferte.
+
+\subsubsection{Spring Boot}
+
+Spring Boot erwies sich als die leistungsstärkste Lösung unter den analysierten Technologien. Die Verwendung des \textit{Spring Initializr} ermöglichte einen schnellen Einstieg in die Projektentwicklung. Spring Boot integrierte umfangreiche Funktionen wie Validierung, Serialisierung und Fehlerbehandlung, was den Implementierungsaufwand erheblich reduzierte. Die Technologie punktete stark bei der Skalierbarkeit und der Performance, insbesondere bei parallelen Anfragen. Zudem profitierte Spring Boot von einer umfangreichen Community und ausgezeichneten Dokumentation.
+
+\subsection{Analytische Nutzwertanalyse}
+
+Nun bewerten wir die jeweilige Technologie mit einem einfachen Punktesystem. Hierbei bedeutet die Zahl \texttt{1} die schlechteste, und die Zahl \texttt{5} die bestmögliche Bewertung.
+
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|l|c|c|c|c|c|}
+		\hline
+		\rowcolor[HTML]{B6D7A8} \textbf{Kriterium} & \textbf{Gewichtung (\%)} & \textbf{Django} & \textbf{Flask} & \textbf{ExpressJs} & \textbf{Spring Boot} \\
+		\hline
+		Einfache Implementierung & 15 & 4 & 5 & 4 & 4 \\
+		\hline
+		Aktuelle Sprachkenntnisse & 20 & 3 & 5 & 3 & 4 \\
+		\hline
+		Skalierbarkeit & 10 & 4 & 3 & 4 & 5 \\
+		\hline
+		Community und Support & 10 & 5 & 3 & 3 & 4 \\
+		\hline
+		Performance & 10 & 3 & 5 & 4 & 5 \\
+		\hline
+		Sicherheit & 10 & 5 & 3 & 3 & 5 \\
+		\hline
+		Integration mit Frontend \& DB & 10 & 4 & 4 & 4 & 4 \\
+		\hline
+		Vorhandene Dokumentation & 10 & 5 & 3 & 3 & 5 \\
+		\hline
+		Verfügbarkeit von Libraries & 5 & 5 & 4 & 5 & 4 \\
+		\hline
+	\end{tabular}
+	\caption{Nutzwertanalyse der Backend-Technologien: Bewertung der Datenbanken nach verschiedenen Kriterien. (wobei 5 = Sehr gut, 1 = Sehr schlecht) (Prompt \cite{prompt-gpt-google-sheets-to-table})}
+    \label{table-analytische-nwa-backend}
+\end{table}
+
+Tabelle \ref{table-analytische-nwa-backend} zeigt, dass die jeweiligen Technologien dementsprechend ihre Stärken und Schwächen besitzen. Während zum Beispiel Flask mit einer einfachen Implementierung punkten kann, ist es, was die Sicherheit angeht, z.B. Spring Boot und Django unterlegen.
+
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\rowcolor[HTML]{B6D7A8} & \textbf{Django} & \textbf{Flask} & \textbf{ExpressJs} & \textbf{Spring Boot} \\
+		\hline
+		Einfache Implementierung & 0.6 & 0.75 & 0.6 & 0.6 \\
+		\hline
+		Aktuelle Sprachkenntnisse & 0.6 & 1 & 0.6 & 0.8 \\
+		\hline
+		Skalierbarkeit & 0.4 & 0.3 & 0.4 & 0.5 \\
+		\hline
+		Community und Support & 0.5 & 0.3 & 0.3 & 0.4 \\
+		\hline
+		Performance & 0.3 & 0.5 & 0.4 & 0.5 \\
+		\hline
+		Sicherheit & 0.5 & 0.3 & 0.3 & 0.5 \\
+		\hline
+		Integration mit Frontend \& DB & 0.4 & 0.4 & 0.4 & 0.4 \\
+		\hline
+		Vorhandene Dokumentation & 0.5 & 0.3 & 0.3 & 0.5 \\
+		\hline
+		Verfügbarkeit von Libraries & 0.25 & 0.2 & 0.25 & 0.2 \\
+		\hline
+		\textbf{GESAMTERGEBNIS} & \textbf{4.05} & \textbf{4.05} & \textbf{3.55} & \textbf{4.4} \\
+		\hline
+	\end{tabular}
+	\caption{Zusammenzählung der einzelnen Bewertungen anhand der in Tabelle \ref{table-analytische-nwa-backend} gegebenen Punkte. Hierbei gilt: je höher, desto besser. (Prompt \cite{prompt-gpt-google-sheets-to-table})}
+    \label{table-analytische-nwa-backend-result}
+\end{table}
+
+Wie in der Tabelle \ref{table-analytische-nwa-backend-result} dargestellt, ist \texttt{Spring Boot} mit einer Punktzahl von \texttt{4.4} der Gewinner. Daher werden wir in diesem Projekt diese Technologie auch für die Backend-Entwicklung verwenden.
+
+Basierend auf der durchgeführten Nutzwertanalyse erweist sich \textbf{Spring Boot} als die optimale Technologie für die Backend-Entwicklung dieses Projekts. Spring Boot überzeugt durch seine einfache Implementierung, umfangreiche Sicherheitsfunktionen und hervorragende Skalierbarkeit. Das bestehende Know-how im Projektteam hinsichtlich der Programmiersprache Java ermöglicht eine effiziente Nutzung des Frameworks.
+
+Im Vergleich zu den alternativen Technologien punktet Spring Boot vor allem durch seine service-orientierte Architektur und die Integration wesentlicher Funktionen wie Validierung und Serialisierung. Django, Flask und ExpressJS bieten zwar interessante Ansätze, konnten jedoch in den bewerteten Kriterien nicht in gleichem Maße überzeugen.
+
+Insgesamt stellt Spring Boot die stabilste und zukunftssicherste Lösung dar und wird daher für die Umsetzung des Projekts verwendet.

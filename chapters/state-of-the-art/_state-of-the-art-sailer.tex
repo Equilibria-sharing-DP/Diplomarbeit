@@ -1,0 +1,67 @@
+\section{Datenbankmanagementsysteme}
+Datenbanken haben seit ihrer Entstehung eine signifikante Entwicklung durchlaufen. Ziel der State-of-the-Art-Analyse ist es, derzeit relevante Datenbankmanagementsysteme systematisch zu untersuchen und vorzustellen.
+
+\vspace{5mm}\makefig{images/statistikDBMS.png}{height=10cm}{ Beliebtesten Datenbankmanagementsysteme weltweit laut Statista \cite{Statista:DBMS}}{fig:caption-label}
+
+\noindent Die im Juni 2024 veröffentlichte, oben dargestellte Grafik (Abbildung 5.1), zeigt die Verteilung der Beliebtheit von Datenbankmanagementsystemen anhand einiger verschiedener Kriterien. \newline Dazu zählen die Anzahl der Erwähnungen in Suchmaschinenergebnissen, das allgemeine Interesse laut Google Trends, die Häufigkeit technischer Diskussionen auf Plattformen wie Stack Overflow, die Nennung in Jobangeboten, die Präsenz in LinkedIn-Profilen sowie die Relevanz in sozialen Netzwerken wie X (ehemals Twitter). Aus dem Zusammenspiel all dieser Kriterien entstand die auf Statista veröffentlichte und von Petroc Taylor erstellte Grafik.
+
+\newpage
+\subsection{Beliebteste DBMS}
+Da eine Analyse aller in Abbildung 3 dargestellten DBMS den Rahmen  sprengen würde, schließen wir einige Systeme wie \textbf{Microsoft SQL Server} oder \textbf{Oracle Database} aus. Das Ausschlusskriterium bei diesen DBMS ist der finanzielle Aspekt.
+
+\vspace{2mm} \noindent Microsoft Access kommt ebenso nicht infrage, da es zwar für kleine Anwendungen mit wenigen Benutzern und geringen Datenmengen sinnvoll ist, jedoch zum Speichern und effizienten Verwalten von größeren Datenmengen nicht geeignet ist. Microsoft Access ist aufgrund von Skalierungs-, Performance- und Mehrbenutzerproblemen keine geeignete Wahl für dieses Projekt, siehe \cite{MSAccess:Comparison}.
+
+\vspace{2mm}
+\noindent In diesem Projekt liegt das Hauptaugenmerk auf hoher Performance und Skalierbarkeit, um eine zukunftssichere Erweiterbarkeit zu gewährleisten. (Prompt: \cite{ChatGPT:rewrite1})
+
+\vspace{3mm} 
+\noindent Aufgrund dessen erfolgt eine Vorstellung der folgenden vier Datenbankmanagementsysteme, gefolgt von einem Vergleich ihrer Vor- und Nachteile: \textbf{PostgreSQL}, \textbf{MariaDB}, \textbf{Amazon Aurora} und \textbf{MongoDB}.
+
+
+\subsubsection{PostgreSQL}
+PostgreSQL ist ein \gls{ac-ORDB}, welches, laut \cite{PostgreSQL:Hersteller}, ursprünglich aus dem von der University of California at Berkeley entwickelten POSTGRES 4.2 hervorgegangen ist. Es zeichnet sich durch Stabilität, Erweiterbarkeit und Unterstützung komplexer Datentypen aus, wie \cite{PostgreSQL:IBM} beschreibt. Als modernes \gls{Open-Source}-DBMS ist es ACID-konform, kombiniert \textbf{relationale} und \textbf{objektorientierte} Modelle und bietet Hochverfügbarkeit. Dank effizienter Skalierbarkeit und paralleler Abfragen eignet sich PostgreSQL für vielfältige Anwendungen, von Webanwendungen bis hin zu Data-Warehousing. PostgreSQL wird kontinuierlich weiterentwickelt und kann ohne \gls{Kosten} für jegliche Zwecke verwendet werden. \cite{PostgreSQL:Usage} beschreibt bekannte Projekte, welche PostgreSQL zur Realisierung benutzen, sind \textbf{Amazon Web Services} und \textbf{AIVEN}. 
+
+
+\subsubsection{MariaDB}
+MariaDB ist ebenso ein leistungsstarkes, vollständig Open-Source-basiertes relationales Datenbankmanagementsystem, das aus einem \gls{Fork} von MySQL hervorgegangen ist. Es wurde entwickelt, um MySQL zu ersetzen und bietet zusätzliche Funktionen wie erweiterte Performance und optimierte Replikation, wie in Pierre Mavro's Buch \cite{Buch:PierreMavro} genauer erläutert wird . MariaDB unterstützt moderne Anforderungen wie hohe Skalierbarkeit und \gls{Datenbank-Sharding} und wird von einer aktiven Community weiterentwickelt und betreut, sowie von großen Unternehmen wie Wikipedia, WordPress und Google genutzt. \cite{MariaDB:Intro} behauptet, dass MariaDB besonders für performante und skalierbare Anwendungen geeignet ist. 
+
+
+
+\newpage
+\subsubsection{MongoDB}
+MongoDB ist ein flexibles, dokumentenbasiertes NoSQL-Datenbankmanagementsystem, welches sich laut \cite{MongoDB:Introduction} durch horizontale Skalierbarkeit, hohe Agilität und flexible Datenmodellierung auszeichnet. Es wird oft für moderne Anwendungen verwendet, da das Speichern von Daten in \gls{ac-JSON}-ähnlichen Dokumenten geschieht. Der Hersteller gibt an hier \cite{MongoDB:Databases} an, dass MongoDB sowohl selbstverwaltete als auch vollständig cloudbasierte Lösungen bietet. (z.B.: MongoDB Atlas, eine Plattform, die in über 100 Regionen auf AWS, Google Cloud und Azure verfügbar ist). MongoDB wird außerdem von einigen großen Dienstleistern wie unter anderem \textbf{accenture}, \textbf{cisco} und \textbf{Toyota connected} verwendet. \cite{MongoDB:MainPage}\newline 
+
+
+\begin{lstlisting}[language=Java, caption={Beispiel für ein JSON-Objekt, welches in einer MongoDB Datenbank gespeichert sein könnte \cite{MongoDB:JSON}}]
+{
+  "_id": 1,
+  "name": {
+    "first": "John",
+    "last": "Backus"
+  },
+  "contribs": [
+    "Fortran",
+    "ALGOL",
+    "Backus-Naur Form",
+    "FP"
+  ],
+  "awards": [
+    {
+      "award": "W.W. McDowell Award",
+      "year": 1967,
+      "by": "IEEE Computer Society"
+    },
+    {
+      "award": "Draper Prize",
+      "year": 1993,
+      "by": "National Academy of Engineering"
+    }
+  ]
+}    
+\end{lstlisting}
+
+
+
+\subsubsection{Amazon Aurora}
+Amazon Aurora ist ein hochperformantes, vollständig verwaltetes relationales Datenbankmanagementsystem (RDBMS), welches von \gls{Amazon Web Services} entwickelt wurde. Es kombiniert die Skalierbarkeit von Open-Source-Datenbanken mit der Leistung kommerzieller und ist dabei, laut eigenen angeben, Kosteneffizient. Ebenso gibt Amazon an \cite{Amazon:S3}, erweiterte Funktionen wie automatische Skalierung und kontinuierliche Sicherung in \gls{Amazon S3} anzubieten. Es unterstützt sowohl MySQL- als auch PostgreSQL-Kompatibilität, wodurch eine problemlose Migration in bestehende Anwendungen ermöglicht wird. Mit einer Verfügbarkeit von bis zu "99,99\% " \textit{-AWS \cite{Amazon:aurora}} und einer hohen Ausfallsicherheit ist es ideal für moderne Anwendungen, die hohe Leistung, Skalierbarkeit und Zuverlässigkeit erfordern. Laut \cite{Amazon:aurora} nutzen große Firmen wie Samsung, Panasonic und Nintendo nutzen die Dienste von Amazon Aurora. 
+

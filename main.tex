@@ -1,0 +1,183 @@
+\documentclass[minted,twoside]{thesis}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}   
+\usepackage{graphicx}
+\usepackage{parskip} % deaktiviert unnötige einrückungen nach rechts
+\usepackage{listings} % für Code-Darstellung
+\usepackage{multirow}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{dirtree}
+\usepackage{mdframed}  % Für Rahmen um die Prompts und Antworten
+\usepackage{helvet}% Serifenlose Schriftart für moderneren Look
+%über und unter Kapitelüberschriften
+
+% Required
+\title{Equilibria Sharing}
+% Authors
+\author{Manuel Fellner}{5BHIT}{Projektleiter | Entwicklung des Backends}
+\author{Mohamed Megahed}{5BHIT}{Entwicklung des Frontends}
+\author{Sebastian Pollak}{5DHIT}{Entwicklung des Frontends}
+\author{Sebastian Sailer}{5BHIT}{Implementierung der Datenbank}
+% Date of submission
+\date{08.04.2025}
+% Optional
+\definecolor{backcolour}{RGB}{255,255,255}       % Weißer Hintergrund
+\definecolor{codegreen}{RGB}{0,128,0}            % Sattes Grün für Kommentare
+\definecolor{codegray}{RGB}{100,100,100}         % Grau für Zeilennummern
+\definecolor{codepurple}{RGB}{34,139,34}         % Dunkelgrün für Strings
+\definecolor{keywordgreen}{RGB}{0,150,0}         % Grün für Keywords
+
+\lstset{
+  inputencoding=utf8,
+  extendedchars=true,
+  literate=%
+    {ä}{{\"a}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+    {Ä}{{\"A}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+    {ß}{{\ss}}1
+    {é}{{\'e}}1 {è}{{\`e}}1
+    {€}{{\euro}}1
+    {→}{{$\rightarrow$}}1
+    {–}{{--}}1
+    {—}{{---}}1
+    {°}{{\textdegree}}1
+}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen}\ttfamily\itshape,
+    keywordstyle=\color{keywordgreen}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                                 
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+%    frame=single,
+    rulecolor=\color{codegray}
+}
+
+\lstdefinelanguage{JavaScript}{
+  morekeywords={
+    break, case, catch, continue, debugger, default, delete, do, else,
+    finally, for, function, if, in, instanceof, new, return, switch,
+    this, throw, try, typeof, var, let, const, void, while, with,
+    class, export, import, extends, super, implements, enum, await,
+    async, static, yield, interface, type, from, as
+  },
+  keywordstyle=\color{keywordgreen}\bfseries,
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{codegreen}\ttfamily\itshape,
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]`,
+  stringstyle=\color{codepurple},
+  showstringspaces=false,
+  showspaces=false,
+  showtabs=false,
+  tabsize=2
+}
+
+
+% Stil aktivieren
+\lstset{
+    style=mystyle
+}
+
+\myteacher{Dipl.Ing.[FH] Mag. Christoph Brein-Kudlacek}
+\myyear{2024/25}
+\mydivision{Medientechnik, Systemtechnik} 
+% \selectlanguage{english}			% Set language to english
+\selectlanguage{ngerman}			% Set language to german
+\setcode{frame=single} 			% Add a frame to codes
+\setcode{bgcolor=AlmostWhite}		% Add a background to codes (minted only)
+% \usemintedstyle{rainbow_dash} 	% autumn, rainbow_dash, tango (default), trac
+\begin{document}
+\pagestyle{fancy}
+\input{chapters/kurzfassung}
+% Table of contents
+\tableofcontents\glsresetall
+\pagestyle{fancy}
+\setauthor{ }
+\include{chapters/danksagung}
+\include{chapters/vorwort} 			% Include the chapter „Vorwort“
+\include{chapters/einleitung}
+
+% Dokumente für die Literaturrecherche
+
+\include{chapters/literaturrecherche/literaturrecherche}
+
+\setauthor{Manuel Fellner}
+\include{chapters/literaturrecherche/_literaturrecherche-fellner}
+\setauthor{Sebastian Sailer}
+\include{chapters/literaturrecherche/_literaturrecherche-sailer}
+\setauthor{Sebastian Pollak}
+\include{chapters/literaturrecherche/_literaturrecherche-pollak}
+\setauthor{Mohamed Megahed}
+\include{chapters/literaturrecherche/_literaturrecherche-megahed}
+
+% Dokumente für State of the Art
+
+\include{chapters/state-of-the-art/state-of-the-art}
+
+\setauthor{Manuel Fellner}
+\include{chapters/state-of-the-art/_state-of-the-art-fellner}
+\setauthor{Sebastian Sailer}
+\include{chapters/state-of-the-art/_state-of-the-art-sailer}
+\setauthor{Sebastian Pollak}
+\include{chapters/state-of-the-art/_state-of-the-art-pollak}
+\setauthor{Mohamed Megahed}
+\include{chapters/state-of-the-art/_state-of-the-art-megahed}
+
+% Dokumente für Machbarkeit
+
+\include{chapters/machbarkeit/machbarkeit}
+
+\setauthor{Manuel Fellner}
+\include{chapters/machbarkeit/_machbarkeit-fellner}
+\setauthor{Sebastian Sailer}
+\include{chapters/machbarkeit/_machbarkeit-sailer}
+\setauthor{Sebastian Pollak}
+\include{chapters/machbarkeit/_machbarkeit-pollak}
+\setauthor{Mohamed Megahed}
+\include{chapters/machbarkeit/_machbarkeit-megahed}
+
+% Dokumente für Konzept
+
+\include{chapters/konzept/konzept}
+
+\setauthor{Manuel Fellner}
+\include{chapters/konzept/_konzept-fellner}
+\setauthor{Sebastian Sailer}
+\include{chapters/konzept/_konzept-sailer}
+\setauthor{Sebastian Pollak}
+\include{chapters/konzept/_konzept-pollak}
+\setauthor{Mohamed Megahed}
+\include{chapters/konzept/_konzept-megahed}
+
+% Dokumente für Implementierung
+
+\include{chapters/implementierung/implementierung}
+
+\setauthor{Manuel Fellner}
+\include{chapters/implementierung/_implementierung-fellner}
+\setauthor{Sebastian Sailer}
+\include{chapters/implementierung/_implementierung-sailer}
+\setauthor{Sebastian Pollak}
+\include{chapters/implementierung/_implementierung-pollak}
+\setauthor{Mohamed Megahed}
+\include{chapters/implementierung/_implementierung-megahed}
+
+\setauthor{ }
+\include{chapters/retrospektive}
+\include{chapters/conclusio}
+
+%\glsaddall	% Also list unused glossary entries
+\end{document}

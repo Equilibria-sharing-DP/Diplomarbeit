@@ -1,0 +1,118 @@
+\section{Technische Machbarkeit der Mitarbeiteransicht}
+
+\subsection{Kriterien}
+Die Wahl der Kriterien für die Bewertung der Frontend-Technologien basiert auf den spezifischen Anforderungen des Projekts. Jedes Kriterium spiegelt eine entscheidende Eigenschaft wider, die den Erfolg der Umsetzung maßgeblich beeinflusst. Die Gewichtung erfolgte in enger Abstimmung mit den Projektzielen und Anforderungen.
+
+\begin{enumerate}
+	\item Einfache Implementierung (15\verb|%|): Wie einfach ist die Frontend-Technologie aufzusetzen und zu implementieren?
+	\item Aktuelle Sprachkenntnisse (20\verb|%|): Welche Programmiersprache dominiert die Technologie? Wird diese bereits vom Projektteam beherrscht?
+	\item Skalierbarkeit (15\verb|%|): Wie gut unterstützt die Frontend-Technologie die Skalierung von Anwendungen?
+	\item Sicherheit (10\verb|%|): Welche Sicherheitsfunktionen stellen diese Technologien bereit? Sind diese bereits automatisch vorhanden, oder müssen sie manuell implementiert werden?
+	\item Performance (10\verb|%|): Wie performant ist die Frontend-Technologie bei der Verarbeitung von Anfragen? Wie geht diese mit einer größeren Skalierung um?
+	\item Community und Support (10\verb|%|): Wie aktiv ist die Community? Bietet der Hersteller von sich aus einen Support an, oder muss man sich dafür an dritte wenden?
+	\item Dokumentation (10\verb|%|): Ist eine Herstellereigene Dokumentation vorhanden? Wie umfangreich und gepflegt ist diese?
+	\item Integration mit Backend \verb|&| Datenbank (10\verb|%|): Wie gut ist die Technologie mit den gängigsten 
+    Backend-/Datenbankframeworks kompatibel?
+\end{enumerate}
+
+Die Gewichtung der Kriterien spiegelt die spezifischen Anforderungen der Mitarbeiteransicht wider. Die höchste Priorität wurde auf die Benutzerfreundlichkeit und die Implementierung gelegt, um die Effizienz der Buchungsdatenverwaltung im Unternehmenskontext zu gewährleisten. Skalierbarkeit und Sicherheit wurden hoch gewichtet, da diese Aspekte entscheidend für die langfristige Nutzbarkeit des Systems sind. Performance, Community und Support, Dokumentation sowie eine einfache Integration mit verschiedenen Backend- und Datenbanksystemen werden als unterstützende, aber nicht zentrale Faktoren betrachtet.
+
+\subsection{Bewertung und Auswahl}
+
+Die einzelnen Technologien wurden im letzten Schritt isoliert voneinander begutachtet, nun ist es Zeit, sie miteinander zu vergleichen.
+
+\subsubsection{Angular}
+
+Angular bietet eine starke Performance, insbesondere für komplexe Anwendungen, dank integrierter Werkzeuge wie Change Detection und Dependency Injection. Allerdings arbeitet Angular mit dem echten DOM, was bei häufigen Änderungen ineffizienter sein kann. Es ist ideal für große Projekte geeignet, da es eine klare Struktur und umfassende Bibliotheken bietet. \newline
+Die Zwei-Wege-Datenbindung und die modulare Architektur fördern die Skalierbarkeit und Modularität. Wie React ist Angular Open Source, jedoch können die längere Entwicklungszeit und höhere Komplexität zu zusätzlichen Kosten führen. Unterstützt von Google, verfügt Angular über eine starke Community, regelmäßige Updates und eine ausgezeichnete Dokumentation. Es ist vielseitig einsetzbar und eignet sich sowohl für Desktop- als auch für mobile Anwendungen, insbesondere durch die Integration mit Tools wie Ionic. Sicherheitsfunktionen wie Content Security Policies und integrierte Mechanismen bieten eine solide Basissicherheit. Die Struktur von Angular schränkt die Flexibilität ein, sorgt jedoch für eine bessere Wartbarkeit und Stabilität bei größeren Projekten. Die hervorragende Dokumentation und Tools wie Angular CLI unterstützen die effiziente Verwaltung und Entwicklung.\textit{\cite{madurapperuma2022state, rathinam2022analysis}}
+
+\subsubsection{React}
+
+React überzeugt durch seine hohe Performance, die durch das virtuelle DOM erreicht wird. Dieses reduziert die Anzahl der DOM-Manipulationen und verbessert die Geschwindigkeit bei dynamischen Updates. Seine komponentenbasierte Architektur ermöglicht eine einfache Skalierung, wobei jedoch externe Bibliotheken für State Management und Routing erforderlich sind, was die Komplexität erhöhen kann. React ist Open Source und verursacht keine Lizenzkosten, jedoch können zusätzliche Kosten für externe Bibliotheken entstehen. Die Community von React ist eine der größten und bietet zahlreiche Ressourcen sowie regelmäßige Updates durch Meta, was die Entwicklung erleichtert. React ist plattformübergreifend verfügbar und kann sowohl in modernen Browsern als auch auf mobilen Plattformen wie React Native verwendet werden. In puncto Sicherheit müssen externe Maßnahmen ergriffen werden, da React keine integrierten Sicherheitsfunktionen bietet. Die Flexibilität von React ist hoch, kann jedoch zu einer steilen Lernkurve führen, insbesondere für Einsteiger. Die Dokumentation ist umfangreich, und zusätzliche Ressourcen von der Community unterstützen den Einstieg. Allerdings erhöht die Verwendung externer Tools wie Redux den Verwaltungsaufwand. \textit{\cite{shetty2020review, rathinam2022analysis, hutagikar2020analysis, awasthiresearch}}
+
+\subsubsection{Vue.js}
+
+Vue.js punktet mit seiner Leichtgewichtigkeit und hohen Performance durch die Nutzung des virtuellen DOMs und eines effizienten Reaktivitätssystems. Es ist besonders für kleinere und mittlere Projekte geeignet, während größere Vorhaben zusätzliche Bibliotheken und dadurch erhöhte Komplexität erfordern können. Vue.js ist ebenfalls Open Source und verursacht keine Lizenzkosten. Die Community ist kleiner als bei React oder Angular, bietet jedoch eine starke Unterstützung und wächst kontinuierlich. Vue kann problemlos in modernen Browsern und mobilen Plattformen verwendet werden. Im Bereich Sicherheit ähnelt es React und benötigt externe Maßnahmen, da keine integrierten Sicherheitsmechanismen vorhanden sind. Die einfache Syntax und hohe Flexibilität machen Vue besonders attraktiv für Entwickler, die intuitive Frameworks bevorzugen. Vue bietet eine exzellente Dokumentation und hat eine geringere Lernkurve als Angular, was den Einstieg erleichtert. \textit{\cite{vue_blog, vuejs, rathinam2022analysis}}
+
+\subsubsection{Next.js}
+
+Next.js punktet durch seine hybride Architektur mit serverseitigem Rendering (SSR) und statischer Generierung (SSG), was schnelle Ladezeiten und SEO-Optimierung ermöglicht. Es integriert Hot Code Reloading, automatisches Routing und TypeScript-Unterstützung, wodurch die Entwicklung effizient und skalierbar wird.
+Obwohl keine Lizenzkosten anfallen, können externe Integrationen zusätzliche Kosten verursachen. Die Community ist aktiv, unterstützt von Vercel, mit umfangreicher Dokumentation und regelmäßigen Updates. Sicherheitsfunktionen wie Content Security Policies sind möglich, erfordern jedoch zusätzliche Maßnahmen. Insgesamt ist Next.js ideal für moderne, performante Webanwendungen.  \textit{\cite{nextjs, nextjs_blog}}
+
+\subsubsection{Analytische Nutzwertanalyse}
+
+Nun bewerten wir die jeweilige Technologie mit einem einfachen Punktesystem. Hierbei bedeutet die Zahl \texttt{1} die schlechteste, und die Zahl \texttt{5} die bestmögliche Bewertung.
+
+
+
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|l|c|c|c|c|c|c|}
+		\hline
+		\rowcolor[HTML]{B6D7A8} \textbf{Kriterium} & \textbf{Gewichtung (\%)} & \textbf{Angular} & \textbf{React} & \textbf{Vue.js} & \textbf{Next.js} \\
+		\hline
+		Einfache Implementierung & 15 & 4 & 4 & 5 & 5 \\
+		\hline
+		Aktuelle Sprachkenntnisse & 20 & 3 & 5 & 3 & 5 \\
+		\hline
+		Skalierbarkeit & 10 & 5 & 5 & 4 & 5 \\
+		\hline
+		Sicherheit & 10 & 4 & 3 & 3 & 4 \\
+		\hline
+		Performance & 10 & 4 & 5 & 5 & 5 \\
+		\hline
+		Community und Support & 10 & 4 & 5 & 4 & 5 \\
+		\hline
+		Integration mit Backend \& DB & 10 & 4 & 5 & 4 & 5 \\
+		\hline
+		Vorhandene Dokumentation & 10 & 5 & 4 & 4 & 5 \\
+		\hline
+		Verfügbarkeit von Libraries & 5 & 5 & 4 & 5 & 5 \\
+		\hline
+	\end{tabular}
+	\caption{Nutzwertanalyse der Frontend-Technologien: Bewertung der Frameworks nach verschiedenen Kriterien. (wobei 5 = Sehr gut, 1 = Sehr schlecht)}
+\end{table}
+
+
+In Tabelle \ref{tab:framework-comparison} wird ersichtlich, dass die jeweiligen Technologien dementsprechend ihre Stärken und Schwächen besitzen. Während zum Beispiel React mit einer einfachen Implementierung punkten kann, ist es, was die Sicherheit angeht, z.B. Angular unterlegen.
+
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\rowcolor[HTML]{B6D7A8} \textbf{Kriterium} & \textbf{Angular} & \textbf{React} & \textbf{Vue.js} & \textbf{Next.js} \\
+		\hline
+		Einfache Implementierung & 0.5 & 0.6 & 0.7 & 0.8 \\
+		\hline
+		Aktuelle Sprachkenntnisse & 0.4 & 0.6 & 0.7 & 0.8 \\
+		\hline
+		Skalierbarkeit & 0.4 & 0.6 & 0.7 & 0.8 \\
+		\hline
+		Community und Support & 0.4 & 0.6 & 0.7 & 0.8 \\
+		\hline
+		Performance & 0.3 & 0.5 & 0.6 & 0.7 \\
+		\hline
+		Sicherheit & 0.3 & 0.4 & 0.5 & 0.6 \\
+		\hline
+		Integration mit Backend \& DB & 0.3 & 0.4 & 0.5 & 0.6 \\
+		\hline
+		Vorhandene Dokumentation & 0.4 & 0.5 & 0.6 & 0.7 \\
+		\hline
+		Verfügbarkeit von Libraries & 0.3 & 0.4 & 0.5 & 0.6 \\
+		\hline
+		\textbf{GESAMTERGEBNIS} & \textbf{3.6} & \textbf{4.0} & \textbf{4.3} & \textbf{4.32} \\
+		\hline
+	\end{tabular}
+	\caption{Zusammenfassung der Bewertungen: Next.js schneidet am besten ab, knapp gefolgt von Vue.js, React und Angular.}
+\end{table}
+
+\subsubsection{Ergebnis}
+
+Basierend auf der Nutzwertanalyse und den spezifischen Anforderungen des Projekts erweist sich
+Next.js als die am besten geeignete Wahl (\ref{tab:framework-results}). Es bietet eine hervorragende Balance zwischen Performance, Skalierbarkeit und Benutzerfreundlichkeit und kombiniert diese Eigenschaften mit den Vorteilen einer aktiven Community und umfangreicher Dokumentation. Vue.js konnte ebenfalls mit starken Ergebnissen überzeugen und eignet sich besonders für Projekte mit Fokus auf Flexibilität und einfacher Implementierung.
+
+React zeigte seine Vorteile durch seine hohe Popularität und umfangreichen Bibliotheken, die jedoch in diesem Projekt nicht in gleichem Maße benötigt werden. Angular hingegen wurde aufgrund der vergleichsweise höheren Komplexität und geringeren Benutzerfreundlichkeit nicht priorisiert, obwohl es sich durch starke Skalierbarkeit und Sicherheitsfeatures auszeichnet.
+
+Die abschließende Bewertung durch die Nutzwertanalyse fasst die genannten Kriterien zusammen und bestätigt Next.js als die beste Wahl für dieses Projekt, da es eine moderne und vielseitige Lösung bietet, die die Anforderungen optimal erfüllt.

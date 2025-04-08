@@ -1,0 +1,107 @@
+\section{Technische Machbarkeit des Formularsystems}
+
+\subsection{Einführung}
+Die Auswahl der geeigneten Technologie zur Implementierung von Formularen und deren Validierung erfordert eine fundierte Bewertung verschiedener Frameworks. Um die Machbarkeit der Technologien systematisch und objektiv zu bewerten, wird eine Nutzwertanalyse herangezogen. 
+
+\subsection{Nutzwertanalyse}
+
+\subsubsection{Kriterien}
+Die Auswahl der Kriterien für die Bewertung der Formular-Frameworks erfolgt unter Berücksichtigung der spezifischen Anforderungen unseres Projekts. Die Gewichtung der Kriterien wurde in Abstimmung mit den Projektzielen und der vorgesehenen Nutzung des Frameworks vorgenommen.
+
+\begin{enumerate}
+	\item \textbf{Flexibilität und Anpassbarkeit(30\%)}  Die Möglichkeit, das Framework an spezifische Projektanforderungen anzupassen und komplexe Formularstrukturen zu unterstützen.
+	\item \textbf{Integrationsflexibilität(25\%)} Die Fähigkeit, verschiedene Validierungsbibliotheken zu integrieren und mit anderen \gls{react}-Komponenten zusammenzuarbeiten.
+	\item \textbf{Entwicklerfreundlichkeit(20\%)} Die einfache Implementierung und klare API-Struktur sind entscheiden für die Produktivität
+	\item \textbf{Performance(15\%)} Die Optimierung der Leistung, insbesondere durch Minimierung von Re-Renders, ist ein Hauptziel aller betrachteten Frameworks.
+	\item \textbf{Community und Ökosystem(10\%)} Die Verfügbarkeit von Ressourcen, Dokumentation und Community-Support ist wichtig für die Entwicklung.
+\end{enumerate} 
+
+Die Gewichtung dieser Kriterien spiegelt die spezifischen Anforderungen des Projekts wider. Die höchste Priorität wurde auf Flexibilität und Anpassbarkeit gelegt, da sie die Grundlage für die Umsetzung komplexer Formularstrukturen bilden. Integrationsflexibilität ist ebenfalls von zentraler Bedeutung, um eine nahtlose Zusammenarbeit mit verschiedenen Validierungsbibliotheken wie Zod zu ermöglichen. Die Entwicklerfreundlichkeit, die Community und das Ökosystem tragen erheblich zur Produktivität der Entwickler bei. Die Performance des Frameworks wird als nicht primär betrachtet, verbessert jedoch schlussendlich die \gls{usability}. \cite{prompt17_pollak}
+
+\subsubsection{Ergebnisse}
+\paragraph{Flexibilität und Anpassbarkeit}
+\begin{enumerate}
+	\item \textbf{React Hook Form} Der perfekte Vergleich von React Hook Form und Formik\cite{reactHookFormVsFormik} zeigt die nahtlose Einbindung von verschiedenen UI-Bibliotheken und Validierungsschemata ermöglicht eine hohe Anpassungsfähigkeit und Flexibilität.
+	
+	\item \textbf{Formik} Formik bietet eine strukturierte Herangehensweise an die Formularverwaltung und unterstützt komplexe Formularstrukturen, einschließlich verschachtelter Felder. Die umfangreiche Feature-Palette ermöglicht es, komplexe Validierungen und Anpassungen vorzunehmen.
+	
+	\item \textbf{React Final Form} Laut der React Final Form Dokumentation\cite{reactFinalFormLogrocket} ist eine besonders herausragende Eigenschaft dieser Bibliotheken ihre außergewöhnlich hohe Flexibilität. Sie unterstützt komplexe Formularstrukturen und bietet Entwicklern die Möglichkeit, Formulare effizient an spezifische Anforderungen anzupassen, da alles manuell entwickelt werden kann. 
+\end{enumerate}
+
+\paragraph{Integrationsflexibilität}
+\begin{enumerate}
+	\item \textbf{React Hook Form} Die Bibliothek lässt sich problemlos mit verschiedenen Validierungsbibliotheken und verschiedenen UI-Bibliotheken kombinieren. 
+	
+	\item \textbf{Formik} Bietet ebenso eine Integration von Validierungsbibliotheken. Jedoch muss häufig zusätzliche Logik für die Synchronisation zwischen dem Formularzustand und dem Validierungsschema implementiert werden.
+	
+	\item \textbf{React Final Form} Implementierung von Validierung funktioniert nur kompliziert mit Validierungsbibliotheken.
+\end{enumerate}
+
+\paragraph{Entwicklerfreundlichkeit}
+\begin{enumerate}
+	\item \textbf{React Hook Form} Mit einer einfachen API und der Nutzung von React Hooks bietet diese Bibliothek eine geringe Lernkurve und ermöglicht eine schnelle Implementierung, wodurch die Produktivität gesteigert wird. 
+	
+	\item \textbf{Formik} Durch die höheren Abstraktionsebenen kann es zu einer höheren Lernkurve kommen. 
+	
+	\item \textbf{React Final Form} Dieses Framework bietet ebenso eine einfache Implementierung hat jedoch einen höheren Entwicklungsaufwand.
+\end{enumerate}
+
+\paragraph{Performance}
+\begin{enumerate}
+	\item \textbf{React Hook Form} Durch die im Kapitel \ref{sec:perfomanceHookForm} erklärten Methoden optimiert dieses Framework massiv die Performance. 
+	
+	\item \textbf{Formik} Formik bietet eine weniger performante Lösung an, jedoch kann durch sorgfältiger Implementierung und Optimierung auch die Leistung verbessert werden.
+	
+	\item \textbf{React Final Form} Diese Bibliothek wurde durch ihre extreme Leichtgewichtigkeit auf hohe Performance getrimmt.  
+\end{enumerate}
+
+\paragraph{Community und Ökosystem}
+\begin{enumerate}
+	\item \textbf{React Hook Form} Durch das schnelle Wachstum verfügt dieses Framework über sehr gute Ressourcen und Dokumentation.
+	
+	\item \textbf{Formik} Formik existiert seit 2016 und hat eine große und aktive Community mit zahlreichen Ressourcen, Integrationen und umfassender Dokumentation, was den Entwicklungsprozess unterstützt.
+	
+	\item \textbf{React Final Form} Bietet eine begrenzte Dokumentation durch kleinere Community an.
+\end{enumerate}
+
+\paragraph{Zod}
+Da Zod, wie oben beschrieben, nicht vergleichbar mit den anderen Frameworks ist, wurde dieses in der Nutzwertanalyse nicht berücksichtigt. \cite{prompt18_pollak}
+
+\subsubsection{Bewertung}
+Die Bewertung der einzelnen Technologien erfolgt anhand eines einfachen Punktesystems. Dabei stellt die Zahl 1 die niedrigste und die Zahl 5 die höchste erreichbare Punktzahl dar.
+
+In Tabelle \ref{tab:framework-comparison} wird eine übersichtliche Darstellung der Bewertungen präsentiert. Die Tabelle erlaubt einen Vergleich der verschiedenen Systeme anhand der Punktebewertung, um eine optimale Entscheidung treffen zu können. In Tabelle \ref{tab:framework-results} werden die Punkte unter Berücksichtigung der Gewichtung berechnet, wodurch das Ergebnis der Nutzwertanalyse ermittelt wird.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\rowcolor[HTML]{B6D7A8} \textbf{Kriterium}           & \textbf{Gewichtung (\%)} & \textbf{React Hook Form} & \textbf{Formik} & \textbf{React Final Form} \\ \hline
+		Performance                  & 15                       & 5                        & 3               & 5                         \\ \hline
+		Flexibilität und Anpassbarkeit & 30                    & 4                        & 5               & 5                         \\ \hline
+		Entwicklerfreundlichkeit     & 20                       & 5                        & 3               & 4                         \\ \hline
+		Integrationsflexibilität     & 25                       & 5                        & 4               & 2                         \\ \hline
+		Community und Ökosystem      & 10                       & 5                        & 5               & 3                         \\ \hline
+		\textbf{GESAMT}              & \textbf{100}            &                          &                 &                           \\ \hline
+	\end{tabular}
+	\caption{Vergleich der Frameworks anhand von Kriterien}
+	\label{tab:framework-comparison}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|c|c|}
+		\hline
+		\rowcolor[HTML]{B6D7A8} \textbf{Kriterium}                 & \textbf{React Hook Form} & \textbf{Formik} & \textbf{React Final Form} \\ \hline
+		Performance                        & 0,75                     & 0,45            & 0,75                      \\ \hline
+		Flexibilität und Anpassbarkeit     & 1,2                      & 1,5             & 1,5                       \\ \hline
+		Entwicklerfreundlichkeit           & 1                        & 0,6             & 0,8                       \\ \hline
+		Integrationsflexibilität           & 1,25                     & 1               & 0,5                       \\ \hline
+		Community und Ökosystem            & 0,5                      & 0,5             & 0,3                       \\ \hline
+		\textbf{GESAMTERGEBNIS}            & \textbf{4,7}             & \textbf{4,05}   & \textbf{3,85}             \\ \hline
+	\end{tabular}
+	\caption{Berechnetes Gesamtergebnis der Frameworks}
+	\label{tab:framework-results}
+\end{table}
+
+Nach der Bewertung der drei Frameworks React Hook Form, Formik und React Final Form kann aus Tabelle \ref{tab:framework-results} abgelesen werden, dass React Hook Form mit dem Ergebnis 4.7 die beste Wahl für dieses Projekt ist. Es bietet die beste Kombination aus den oben genannten Kriterien, während es die Entwicklungszeit reduziert und damit eine effiziente Lösung für die Formularverwaltung bereitstellt. 
